@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ensiasd_element_tree" model="ir.ui.view">
+        <field name="name">ensiasd.element.tree</field>
+        <field name="model">ensiasd.element</field>
+        <field name="arch" type="xml">
+            <tree string="Éléments">
+                <field name="module_id"/>
+                <field name="name"/>
+                <field name="type_element"/>
+                <field name="volume_horaire"/>
+                <field name="enseignant_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ensiasd_element_form" model="ir.ui.view">
+        <field name="name">ensiasd.element.form</field>
+        <field name="model">ensiasd.element</field>
+        <field name="arch" type="xml">
+            <form string="Élément">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="module_id"/>
+                        </group>
+                        <group>
+                            <field name="type_element"/>
+                            <field name="volume_horaire"/>
+                            <field name="coefficient"/>
+                            <field name="enseignant_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Séances">
+                            <field name="seance_ids">
+                                <tree>
+                                    <field name="date"/>
+                                    <field name="heure_debut" widget="float_time"/>
+                                    <field name="heure_fin" widget="float_time"/>
+                                    <field name="salle_id"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ensiasd_element" model="ir.actions.act_window">
+        <field name="name">Éléments de module</field>
+        <field name="res_model">ensiasd.element</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

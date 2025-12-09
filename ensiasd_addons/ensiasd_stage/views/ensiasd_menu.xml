@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu racine APPLICATION STAGES -->
+    <menuitem id="menu_ensiasd_stage_root"
+              name="Stages"
+              sequence="30"
+              web_icon="ensiasd_stage,static/description/icon.png"/>
+
+    <menuitem id="menu_ensiasd_stage_main"
+              name="Stages"
+              parent="menu_ensiasd_stage_root"
+              sequence="1"/>
+
+    <menuitem id="menu_ensiasd_stage_list"
+              name="Tous les stages"
+              parent="menu_ensiasd_stage_main"
+              action="action_ensiasd_stage"
+              sequence="1"/>
+
+    <menuitem id="menu_ensiasd_entreprise"
+              name="Entreprises partenaires"
+              parent="menu_ensiasd_stage_root"
+              action="action_ensiasd_entreprise"
+              sequence="2"/>
+</odoo>

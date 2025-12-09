@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ensiasd_annee_tree" model="ir.ui.view">
+        <field name="name">ensiasd.annee.tree</field>
+        <field name="model">ensiasd.annee</field>
+        <field name="arch" type="xml">
+            <tree string="Années Universitaires" decoration-info="is_current==True">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="date_debut"/>
+                <field name="date_fin"/>
+                <field name="is_current"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ensiasd_annee_form" model="ir.ui.view">
+        <field name="name">ensiasd.annee.form</field>
+        <field name="model">ensiasd.annee</field>
+        <field name="arch" type="xml">
+            <form string="Année Universitaire">
+                <header>
+                    <button name="action_open" string="Ouvrir" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_set_current" string="Définir comme courante" type="object" invisible="is_current == True or state != 'open'"/>
+                    <button name="action_close" string="Clôturer" type="object" class="btn-danger" invisible="state != 'open'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Année en cours" bg_color="text-bg-success" invisible="is_current != True"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                        </group>
+                        <group>
+                            <field name="date_debut"/>
+                            <field name="date_fin"/>
+                            <field name="is_current"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ensiasd_annee" model="ir.actions.act_window">
+        <field name="name">Années Universitaires</field>
+        <field name="res_model">ensiasd.annee</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

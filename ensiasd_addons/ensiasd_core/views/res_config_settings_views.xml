@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Ajout de la section ENSIASD dans les paramètres Odoo -->
+    <record id="res_config_settings_view_form_ensiasd" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.ensiasd</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="ENSIASD" string="ENSIASD" name="ensiasd_core" groups="ensiasd_core.group_ensiasd_admin">
+                    <block title="Configuration de l'école">
+                        <setting string="Nom de l'école" help="Définir le nom de l'établissement">
+                            <field name="ensiasd_school_name"/>
+                        </setting>
+                        <setting string="Année courante" help="Année universitaire en cours">
+                            <field name="ensiasd_annee_courante_id"/>
+                        </setting>
+                    </block>
+                    <block title="Paramètres de notation">
+                        <setting string="Note maximale">
+                            <field name="ensiasd_note_max"/>
+                        </setting>
+                        <setting string="Note de validation">
+                            <field name="ensiasd_note_validation"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

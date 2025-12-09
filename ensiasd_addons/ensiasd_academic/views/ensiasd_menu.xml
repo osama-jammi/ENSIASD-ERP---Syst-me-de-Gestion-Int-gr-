@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu racine APPLICATION ACADÉMIQUE -->
+    <menuitem id="menu_ensiasd_academic_root"
+              name="Académique"
+              sequence="20"
+              web_icon="ensiasd_academic,static/description/icon.png"/>
+
+    <!-- Sous-menu Structure -->
+    <menuitem id="menu_ensiasd_structure"
+              name="Structure"
+              parent="menu_ensiasd_academic_root"
+              sequence="1"/>
+
+    <menuitem id="menu_ensiasd_filiere"
+              name="Filières"
+              parent="menu_ensiasd_structure"
+              action="action_ensiasd_filiere"
+              sequence="1"/>
+
+    <menuitem id="menu_ensiasd_module"
+              name="Modules"
+              parent="menu_ensiasd_structure"
+              action="action_ensiasd_module"
+              sequence="2"/>
+
+    <menuitem id="menu_ensiasd_element"
+              name="Éléments de module"
+              parent="menu_ensiasd_structure"
+              action="action_ensiasd_element"
+              sequence="3"/>
+
+    <!-- Sous-menu Planning -->
+    <menuitem id="menu_ensiasd_planning"
+              name="Planning"
+              parent="menu_ensiasd_academic_root"
+              sequence="2"/>
+
+    <menuitem id="menu_ensiasd_seance"
+              name="Séances"
+              parent="menu_ensiasd_planning"
+              action="action_ensiasd_seance"
+              sequence="1"/>
+
+    <!-- Sous-menu Inscriptions -->
+    <menuitem id="menu_ensiasd_inscriptions"
+              name="Inscriptions"
+              parent="menu_ensiasd_academic_root"
+              sequence="3"/>
+
+    <menuitem id="menu_ensiasd_inscription"
+              name="Inscriptions aux modules"
+              parent="menu_ensiasd_inscriptions"
+              action="action_ensiasd_inscription"
+              sequence="1"/>
+
+    <!-- Sous-menu Enseignants (lien vers hr) -->
+    <menuitem id="menu_ensiasd_enseignants"
+              name="Enseignants"
+              parent="menu_ensiasd_academic_root"
+              action="action_hr_employee_enseignants"
+              sequence="4"/>
+</odoo>

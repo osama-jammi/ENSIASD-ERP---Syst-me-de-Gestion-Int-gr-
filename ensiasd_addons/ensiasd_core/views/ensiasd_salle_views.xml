@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ensiasd_salle_tree" model="ir.ui.view">
+        <field name="name">ensiasd.salle.tree</field>
+        <field name="model">ensiasd.salle</field>
+        <field name="arch" type="xml">
+            <tree string="Salles">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="batiment"/>
+                <field name="type_salle"/>
+                <field name="capacite"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ensiasd_salle_form" model="ir.ui.view">
+        <field name="name">ensiasd.salle.form</field>
+        <field name="model">ensiasd.salle</field>
+        <field name="arch" type="xml">
+            <form string="Salle">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="type_salle"/>
+                            <field name="capacite"/>
+                        </group>
+                        <group>
+                            <field name="batiment"/>
+                            <field name="etage"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group string="Équipements">
+                        <field name="equipements" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ensiasd_salle" model="ir.actions.act_window">
+        <field name="name">Salles</field>
+        <field name="res_model">ensiasd.salle</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

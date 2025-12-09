@@ -1,0 +1,29 @@
+# -*- coding: utf-8 -*-
+from odoo import models, fields
+
+
+class HrEmployeeAcademic(models.Model):
+    """
+    Extension de hr.employee pour ajouter les relations académiques.
+    """
+    _inherit = 'hr.employee'
+
+    filiere_ids = fields.Many2many(
+        'ensiasd.filiere',
+        'hr_employee_filiere_rel',
+        'employee_id',
+        'filiere_id',
+        string='Filières'
+    )
+    
+    module_ids = fields.One2many(
+        'ensiasd.module',
+        'responsable_id',
+        string='Modules responsable'
+    )
+    
+    element_ids = fields.One2many(
+        'ensiasd.element',
+        'enseignant_id',
+        string='Éléments enseignés'
+    )

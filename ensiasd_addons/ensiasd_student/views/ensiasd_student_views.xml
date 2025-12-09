@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ensiasd_student_tree" model="ir.ui.view">
+        <field name="name">ensiasd.student.tree</field>
+        <field name="model">ensiasd.student</field>
+        <field name="arch" type="xml">
+            <tree string="Étudiants">
+                <field name="matricule"/>
+                <field name="name"/>
+                <field name="cne"/>
+                <field name="email"/>
+                <field name="groupe_id"/>
+                <field name="niveau"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ensiasd_student_form" model="ir.ui.view">
+        <field name="name">ensiasd.student.form</field>
+        <field name="model">ensiasd.student</field>
+        <field name="arch" type="xml">
+            <form string="Étudiant">
+                <header>
+                    <button name="action_inscrire" string="Inscrire" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_activer" string="Activer" type="object" class="btn-success" invisible="state != 'inscrit'"/>
+                    <button name="action_suspendre" string="Suspendre" type="object" class="btn-warning" invisible="state not in ['actif', 'inscrit']"/>
+                    <button name="action_diplomer" string="Diplômer" type="object" invisible="state != 'actif'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nom complet"/></h1>
+                        <h3><field name="matricule"/></h3>
+                    </div>
+                    <group>
+                        <group string="Identifiants">
+                            <field name="cne"/>
+                            <field name="cin"/>
+                            <field name="email"/>
+                            <field name="partner_id" readonly="1"/>
+                        </group>
+                        <group string="Affectation">
+                            <field name="groupe_id"/>
+                            <field name="niveau"/>
+                            <field name="annee_courante_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Informations personnelles">
+                            <group>
+                                <group>
+                                    <field name="sexe"/>
+                                    <field name="date_naissance"/>
+                                    <field name="lieu_naissance"/>
+                                    <field name="nationalite"/>
+                                </group>
+                                <group>
+                                    <field name="phone"/>
+                                    <field name="mobile"/>
+                                    <field name="address"/>
+                                    <field name="city"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Contact d'urgence">
+                            <group>
+                                <field name="contact_urgence_nom"/>
+                                <field name="contact_urgence_tel"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ensiasd_student_kanban" model="ir.ui.view">
+        <field name="name">ensiasd.student.kanban</field>
+        <field name="model">ensiasd.student</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="image"/>
+                <field name="matricule"/>
+                <field name="groupe_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_image">
+                                <img t-att-src="kanban_image('ensiasd.student', 'image', record.id.raw_value)" alt="Photo"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong><field name="name"/></strong>
+                                <div><field name="matricule"/></div>
+                                <div><field name="groupe_id"/></div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_ensiasd_student_search" model="ir.ui.view">
+        <field name="name">ensiasd.student.search</field>
+        <field name="model">ensiasd.student</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="cne"/>
+                <field name="matricule"/>
+                <filter string="Actifs" name="actif" domain="[('state', '=', 'actif')]"/>
+                <filter string="1ère année" name="niveau_1" domain="[('niveau', '=', '1')]"/>
+                <filter string="2ème année" name="niveau_2" domain="[('niveau', '=', '2')]"/>
+                <filter string="3ème année" name="niveau_3" domain="[('niveau', '=', '3')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Groupe" name="group_groupe" context="{'group_by': 'groupe_id'}"/>
+                    <filter string="Niveau" name="group_niveau" context="{'group_by': 'niveau'}"/>
+                    <filter string="État" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ensiasd_student" model="ir.actions.act_window">
+        <field name="name">Étudiants</field>
+        <field name="res_model">ensiasd.student</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{'search_default_actif': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Ajouter un nouvel étudiant</p>
+        </field>
+    </record>
+</odoo>

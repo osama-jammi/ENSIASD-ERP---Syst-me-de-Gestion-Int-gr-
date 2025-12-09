@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Configuration par défaut -->
+        <record id="ensiasd_config_default" model="ensiasd.config">
+            <field name="name">ENSIASD</field>
+            <field name="full_name">École Nationale Supérieure de l'Intelligence Artificielle et Sciences des Données</field>
+            <field name="city">Taroudant</field>
+            <field name="note_max">20.0</field>
+            <field name="note_validation">12.0</field>
+            <field name="note_elimination">6.0</field>
+        </record>
+
+        <!-- Année universitaire -->
+        <record id="annee_2024_2025" model="ensiasd.annee">
+            <field name="name">2024-2025</field>
+            <field name="code">2024</field>
+            <field name="date_debut">2024-09-02</field>
+            <field name="date_fin">2025-07-15</field>
+            <field name="is_current">True</field>
+            <field name="state">open</field>
+        </record>
+
+        <!-- Salles -->
+        <record id="salle_amphi_a" model="ensiasd.salle">
+            <field name="name">Amphithéâtre A</field>
+            <field name="code">AMPHI-A</field>
+            <field name="batiment">Bâtiment Principal</field>
+            <field name="capacite">150</field>
+            <field name="type_salle">amphi</field>
+        </record>
+
+        <record id="salle_tp_info" model="ensiasd.salle">
+            <field name="name">Laboratoire Informatique</field>
+            <field name="code">LAB-INFO</field>
+            <field name="capacite">25</field>
+            <field name="type_salle">tp</field>
+            <field name="equipements">25 postes informatiques, vidéoprojecteur</field>
+        </record>
+    </data>
+</odoo>

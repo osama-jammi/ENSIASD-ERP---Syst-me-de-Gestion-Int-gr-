@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_ensiasd_stage" model="ir.sequence">
+            <field name="name">Référence Stage</field>
+            <field name="code">ensiasd.stage</field>
+            <field name="prefix">STG/%(year)s/</field>
+            <field name="padding">4</field>
+        </record>
+    </data>
+</odoo>

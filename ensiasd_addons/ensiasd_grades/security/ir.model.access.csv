@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ensiasd_note_admin,ensiasd.note.admin,model_ensiasd_note,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_ensiasd_note_teacher,ensiasd.note.teacher,model_ensiasd_note,ensiasd_core.group_ensiasd_teacher,1,1,1,0
+access_ensiasd_note_student,ensiasd.note.student,model_ensiasd_note,ensiasd_core.group_ensiasd_student,1,0,0,0

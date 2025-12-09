@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_ensiasd_absences"
+              name="Absences"
+              parent="ensiasd_academic.menu_ensiasd_academic_root"
+              sequence="11"/>
+
+    <menuitem id="menu_ensiasd_absence_list"
+              name="Gestion des absences"
+              parent="menu_ensiasd_absences"
+              action="action_ensiasd_absence"
+              sequence="1"/>
+</odoo>

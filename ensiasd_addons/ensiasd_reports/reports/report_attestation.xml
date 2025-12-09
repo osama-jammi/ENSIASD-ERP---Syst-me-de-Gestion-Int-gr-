@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_attestation_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="student">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">ATTESTATION DE SCOLARITÉ</h2>
+                        <br/><br/>
+                        <p>
+                            Le Directeur de l'École Nationale Supérieure de l'Intelligence Artificielle 
+                            et Sciences des Données (ENSIASD) atteste que:
+                        </p>
+                        <br/>
+                        <div class="text-center">
+                            <p><strong>M./Mme <t t-esc="student.name"/></strong></p>
+                            <p>CNE: <t t-esc="student.cne"/></p>
+                            <p>CIN: <t t-esc="student.cin or 'N/A'"/></p>
+                        </div>
+                        <br/>
+                        <p>
+                            Est régulièrement inscrit(e) pour l'année universitaire 
+                            <strong><t t-esc="student.annee_courante_id.name or 'N/A'"/></strong>.
+                        </p>
+                        <br/>
+                        <p>Cette attestation est délivrée pour servir et valoir ce que de droit.</p>
+                        <br/><br/>
+                        <div class="row">
+                            <div class="col-6"/>
+                            <div class="col-6 text-center">
+                                <p>Fait à Taroudant</p>
+                                <br/><br/>
+                                <p><strong>Le Directeur</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_attestation" model="ir.actions.report">
+        <field name="name">Attestation de Scolarité</field>
+        <field name="model">ensiasd.student</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ensiasd_reports.report_attestation_document</field>
+        <field name="report_file">ensiasd_reports.report_attestation_document</field>
+        <field name="binding_model_id" ref="ensiasd_student.model_ensiasd_student"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

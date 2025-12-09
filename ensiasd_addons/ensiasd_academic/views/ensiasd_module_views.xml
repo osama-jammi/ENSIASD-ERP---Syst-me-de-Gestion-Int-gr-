@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ensiasd_module_tree" model="ir.ui.view">
+        <field name="name">ensiasd.module.tree</field>
+        <field name="model">ensiasd.module</field>
+        <field name="arch" type="xml">
+            <tree string="Modules">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="filiere_id"/>
+                <field name="semestre"/>
+                <field name="credits_ects"/>
+                <field name="volume_horaire"/>
+                <field name="type_module"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ensiasd_module_form" model="ir.ui.view">
+        <field name="name">ensiasd.module.form</field>
+        <field name="model">ensiasd.module</field>
+        <field name="arch" type="xml">
+            <form string="Module">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="filiere_id"/>
+                            <field name="semestre"/>
+                            <field name="type_module"/>
+                        </group>
+                        <group>
+                            <field name="credits_ects"/>
+                            <field name="coefficient"/>
+                            <field name="volume_horaire"/>
+                            <field name="responsable_id"/>
+                        </group>
+                    </group>
+                    <field name="description"/>
+                    <notebook>
+                        <page string="Éléments">
+                            <field name="element_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="type_element"/>
+                                    <field name="volume_horaire"/>
+                                    <field name="enseignant_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Pré-requis">
+                            <field name="prerequis_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ensiasd_module_search" model="ir.ui.view">
+        <field name="name">ensiasd.module.search</field>
+        <field name="model">ensiasd.module</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="filiere_id"/>
+                <filter string="Obligatoires" name="obligatoire" domain="[('type_module', '=', 'obligatoire')]"/>
+                <filter string="Optionnels" name="optionnel" domain="[('type_module', '=', 'optionnel')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Filière" name="group_filiere" context="{'group_by': 'filiere_id'}"/>
+                    <filter string="Semestre" name="group_semestre" context="{'group_by': 'semestre'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ensiasd_module" model="ir.actions.act_window">
+        <field name="name">Modules</field>
+        <field name="res_model">ensiasd.module</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
