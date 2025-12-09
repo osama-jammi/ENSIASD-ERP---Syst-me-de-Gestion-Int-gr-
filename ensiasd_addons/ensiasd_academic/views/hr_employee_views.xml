@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extension de la vue hr.employee pour ajouter les champs ENSIASD -->
+    <record id="view_hr_employee_form_ensiasd" model="ir.ui.view">
+        <field name="name">hr.employee.form.ensiasd</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="ENSIASD" name="ensiasd_info" groups="ensiasd_core.group_ensiasd_admin">
+                    <group>
+                        <group string="Informations Enseignant">
+                            <field name="is_enseignant"/>
+                            <field name="matricule_enseignant" invisible="is_enseignant == False"/>
+                            <field name="grade" invisible="is_enseignant == False"/>
+                            <field name="specialite" invisible="is_enseignant == False"/>
+                            <field name="date_recrutement" invisible="is_enseignant == False"/>
+                            <field name="bureau" invisible="is_enseignant == False"/>
+                        </group>
+                        <group string="Affectations" invisible="is_enseignant == False">
+                            <field name="filiere_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Filtre pour voir uniquement les enseignants -->
+    <record id="view_hr_employee_search_ensiasd" model="ir.ui.view">
+        <field name="name">hr.employee.search.ensiasd</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_team']" position="after">
+                <separator/>
+                <filter string="Enseignants" name="enseignants" domain="[('is_enseignant', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action pour voir les enseignants -->
+    <record id="action_hr_employee_enseignants" model="ir.actions.act_window">
+        <field name="name">Enseignants</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('is_enseignant', '=', True)]</field>
+        <field name="context">{'default_is_enseignant': True}</field>
+    </record>
+</odoo>

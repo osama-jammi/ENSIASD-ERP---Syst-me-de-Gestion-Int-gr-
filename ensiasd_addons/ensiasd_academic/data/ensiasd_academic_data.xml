@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="filiere_ia" model="ensiasd.filiere">
+            <field name="name">Intelligence Artificielle</field>
+            <field name="code">IA</field>
+            <field name="description">Formation en IA et Machine Learning</field>
+            <field name="niveau">ingenieur</field>
+            <field name="duree">3</field>
+        </record>
+
+        <record id="filiere_ds" model="ensiasd.filiere">
+            <field name="name">Data Science</field>
+            <field name="code">DS</field>
+            <field name="description">Formation en Science des Données</field>
+            <field name="niveau">ingenieur</field>
+        </record>
+
+        <record id="filiere_bd" model="ensiasd.filiere">
+            <field name="name">Big Data</field>
+            <field name="code">BD</field>
+            <field name="description">Formation en Big Data</field>
+            <field name="niveau">ingenieur</field>
+        </record>
+    </data>
+</odoo>

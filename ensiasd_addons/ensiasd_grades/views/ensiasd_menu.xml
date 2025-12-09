@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_ensiasd_notes"
+              name="Notes"
+              parent="ensiasd_academic.menu_ensiasd_academic_root"
+              sequence="10"/>
+
+    <menuitem id="menu_ensiasd_note_saisie"
+              name="Saisie des notes"
+              parent="menu_ensiasd_notes"
+              action="action_ensiasd_note"
+              sequence="1"/>
+</odoo>

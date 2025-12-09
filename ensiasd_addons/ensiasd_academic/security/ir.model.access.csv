@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ensiasd_filiere_admin,ensiasd.filiere.admin,model_ensiasd_filiere,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_ensiasd_filiere_user,ensiasd.filiere.user,model_ensiasd_filiere,ensiasd_core.group_ensiasd_teacher,1,0,0,0
+access_ensiasd_module_admin,ensiasd.module.admin,model_ensiasd_module,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_ensiasd_module_head,ensiasd.module.head,model_ensiasd_module,ensiasd_core.group_ensiasd_head,1,1,1,0
+access_ensiasd_module_user,ensiasd.module.user,model_ensiasd_module,ensiasd_core.group_ensiasd_teacher,1,0,0,0
+access_ensiasd_element_admin,ensiasd.element.admin,model_ensiasd_element,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_ensiasd_element_head,ensiasd.element.head,model_ensiasd_element,ensiasd_core.group_ensiasd_head,1,1,1,0
+access_ensiasd_element_user,ensiasd.element.user,model_ensiasd_element,ensiasd_core.group_ensiasd_teacher,1,0,0,0
+access_ensiasd_seance_admin,ensiasd.seance.admin,model_ensiasd_seance,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_ensiasd_seance_teacher,ensiasd.seance.teacher,model_ensiasd_seance,ensiasd_core.group_ensiasd_teacher,1,1,1,0
+access_ensiasd_inscription_admin,ensiasd.inscription.admin,model_ensiasd_inscription,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_ensiasd_inscription_scolarite,ensiasd.inscription.scolarite,model_ensiasd_inscription,ensiasd_core.group_ensiasd_scolarite,1,1,1,0
+access_ensiasd_inscription_user,ensiasd.inscription.user,model_ensiasd_inscription,ensiasd_core.group_ensiasd_teacher,1,0,0,0

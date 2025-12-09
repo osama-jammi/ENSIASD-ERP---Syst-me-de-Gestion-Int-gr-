@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ensiasd_student_admin,ensiasd.student.admin,model_ensiasd_student,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_ensiasd_student_scolarite,ensiasd.student.scolarite,model_ensiasd_student,ensiasd_core.group_ensiasd_scolarite,1,1,1,0
+access_ensiasd_student_teacher,ensiasd.student.teacher,model_ensiasd_student,ensiasd_core.group_ensiasd_teacher,1,0,0,0
+access_ensiasd_groupe_admin,ensiasd.groupe.admin,model_ensiasd_groupe,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_ensiasd_groupe_scolarite,ensiasd.groupe.scolarite,model_ensiasd_groupe,ensiasd_core.group_ensiasd_scolarite,1,1,1,0
+access_ensiasd_groupe_teacher,ensiasd.groupe.teacher,model_ensiasd_groupe,ensiasd_core.group_ensiasd_teacher,1,0,0,0

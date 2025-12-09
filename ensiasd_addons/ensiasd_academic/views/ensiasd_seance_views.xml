@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ensiasd_seance_tree" model="ir.ui.view">
+        <field name="name">ensiasd.seance.tree</field>
+        <field name="model">ensiasd.seance</field>
+        <field name="arch" type="xml">
+            <tree string="Séances">
+                <field name="date"/>
+                <field name="heure_debut" widget="float_time"/>
+                <field name="heure_fin" widget="float_time"/>
+                <field name="element_id"/>
+                <field name="salle_id"/>
+                <field name="enseignant_id"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ensiasd_seance_form" model="ir.ui.view">
+        <field name="name">ensiasd.seance.form</field>
+        <field name="model">ensiasd.seance</field>
+        <field name="arch" type="xml">
+            <form string="Séance">
+                <header>
+                    <button name="action_done" string="Effectuée" type="object" class="btn-success" invisible="state != 'planned'"/>
+                    <button name="action_cancel" string="Annuler" type="object" invisible="state != 'planned'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="element_id"/>
+                            <field name="enseignant_id"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="heure_debut" widget="float_time"/>
+                            <field name="heure_fin" widget="float_time"/>
+                            <field name="salle_id"/>
+                        </group>
+                    </group>
+                    <group string="Groupes">
+                        <field name="groupe_ids" widget="many2many_tags" nolabel="1"/>
+                    </group>
+                    <field name="notes"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ensiasd_seance_calendar" model="ir.ui.view">
+        <field name="name">ensiasd.seance.calendar</field>
+        <field name="model">ensiasd.seance</field>
+        <field name="arch" type="xml">
+            <calendar string="Planning" date_start="date" color="type_seance" mode="week">
+                <field name="element_id"/>
+                <field name="salle_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="action_ensiasd_seance" model="ir.actions.act_window">
+        <field name="name">Séances</field>
+        <field name="res_model">ensiasd.seance</field>
+        <field name="view_mode">tree,calendar,form</field>
+    </record>
+</odoo>

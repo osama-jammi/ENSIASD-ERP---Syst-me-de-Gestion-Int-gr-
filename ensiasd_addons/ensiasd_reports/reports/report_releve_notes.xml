@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_releve_notes_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="student">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">RELEVÉ DE NOTES</h2>
+                        <h4 class="text-center">Année: <t t-esc="student.annee_courante_id.name or 'N/A'"/></h4>
+                        <br/>
+                        <div class="row">
+                            <div class="col-6">
+                                <p><strong>Matricule:</strong> <t t-esc="student.matricule"/></p>
+                                <p><strong>Nom:</strong> <t t-esc="student.name"/></p>
+                                <p><strong>CNE:</strong> <t t-esc="student.cne"/></p>
+                            </div>
+                            <div class="col-6">
+                                <p><strong>Groupe:</strong> <t t-esc="student.groupe_id.name or 'N/A'"/></p>
+                                <p><strong>Niveau:</strong> <t t-esc="student.niveau"/></p>
+                            </div>
+                        </div>
+                        <br/>
+                        <p class="text-muted">Document généré par ENSIASD ERP</p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_releve_notes" model="ir.actions.report">
+        <field name="name">Relevé de Notes</field>
+        <field name="model">ensiasd.student</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ensiasd_reports.report_releve_notes_document</field>
+        <field name="report_file">ensiasd_reports.report_releve_notes_document</field>
+        <field name="binding_model_id" ref="ensiasd_student.model_ensiasd_student"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

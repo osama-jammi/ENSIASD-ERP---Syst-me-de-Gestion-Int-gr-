@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ensiasd_entreprise_tree" model="ir.ui.view">
+        <field name="name">ensiasd.entreprise.tree</field>
+        <field name="model">ensiasd.entreprise</field>
+        <field name="arch" type="xml">
+            <tree string="Entreprises">
+                <field name="name"/>
+                <field name="city"/>
+                <field name="secteur"/>
+                <field name="contact_nom"/>
+                <field name="stage_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ensiasd_entreprise_form" model="ir.ui.view">
+        <field name="name">ensiasd.entreprise.form</field>
+        <field name="model">ensiasd.entreprise</field>
+        <field name="arch" type="xml">
+            <form string="Entreprise">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="secteur"/>
+                            <field name="website" widget="url"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="address"/>
+                            <field name="city"/>
+                        </group>
+                    </group>
+                    <group string="Contact RH">
+                        <group>
+                            <field name="contact_nom"/>
+                            <field name="contact_email"/>
+                            <field name="contact_phone"/>
+                        </group>
+                    </group>
+                    <field name="notes"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ensiasd_entreprise" model="ir.actions.act_window">
+        <field name="name">Entreprises</field>
+        <field name="res_model">ensiasd.entreprise</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

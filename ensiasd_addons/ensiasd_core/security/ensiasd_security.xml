@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Catégorie ENSIASD -->
+    <record id="module_category_ensiasd" model="ir.module.category">
+        <field name="name">ENSIASD</field>
+        <field name="description">Gestion académique ENSIASD</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- Groupe Étudiant -->
+    <record id="group_ensiasd_student" model="res.groups">
+        <field name="name">Étudiant</field>
+        <field name="category_id" ref="module_category_ensiasd"/>
+        <field name="comment">Accès étudiant - consultation des propres données</field>
+    </record>
+
+    <!-- Groupe Enseignant -->
+    <record id="group_ensiasd_teacher" model="res.groups">
+        <field name="name">Enseignant</field>
+        <field name="category_id" ref="module_category_ensiasd"/>
+        <field name="implied_ids" eval="[(4, ref('group_ensiasd_student'))]"/>
+        <field name="comment">Saisie notes/absences, consultation étudiants</field>
+    </record>
+
+    <!-- Groupe Chef de Filière -->
+    <record id="group_ensiasd_head" model="res.groups">
+        <field name="name">Chef de Filière</field>
+        <field name="category_id" ref="module_category_ensiasd"/>
+        <field name="implied_ids" eval="[(4, ref('group_ensiasd_teacher'))]"/>
+    </record>
+
+    <!-- Groupe Scolarité -->
+    <record id="group_ensiasd_scolarite" model="res.groups">
+        <field name="name">Scolarité</field>
+        <field name="category_id" ref="module_category_ensiasd"/>
+        <field name="implied_ids" eval="[(4, ref('group_ensiasd_teacher'))]"/>
+    </record>
+
+    <!-- Groupe Administrateur -->
+    <record id="group_ensiasd_admin" model="res.groups">
+        <field name="name">Administrateur ENSIASD</field>
+        <field name="category_id" ref="module_category_ensiasd"/>
+        <field name="implied_ids" eval="[(4, ref('group_ensiasd_scolarite')), (4, ref('group_ensiasd_head'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+</odoo>
