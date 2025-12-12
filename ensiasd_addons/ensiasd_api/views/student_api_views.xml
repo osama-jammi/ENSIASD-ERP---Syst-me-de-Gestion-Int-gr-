@@ -7,9 +7,9 @@
         <field name="inherit_id" ref="ensiasd_student.view_ensiasd_student_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <button name="action_set_api_password" 
-                        string="Définir mot de passe API" 
-                        type="object" 
+                <button name="action_set_api_password"
+                        string="Définir mot de passe API"
+                        type="object"
                         class="btn-secondary"
                         groups="ensiasd_core.group_ensiasd_admin,ensiasd_core.group_ensiasd_scolarite"/>
             </xpath>

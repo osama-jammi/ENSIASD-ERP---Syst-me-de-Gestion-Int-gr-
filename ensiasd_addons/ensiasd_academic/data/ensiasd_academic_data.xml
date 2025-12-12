@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="filiere_ia" model="ensiasd.filiere">
-            <field name="name">Intelligence Artificielle</field>
-            <field name="code">IA</field>
-            <field name="description">Formation en IA et Machine Learning</field>
+        <record id="filiere_sdbi" model="ensiasd.filiere">
+            <field name="name">Sciences des Données, Big Data &amp; IA</field>
+            <field name="code">DATA &amp; AI</field>
+            <field name="description">Formation en Sciences des Données, Big Data et Intelligence Artificielle</field>
             <field name="niveau">ingenieur</field>
             <field name="duree">3</field>
         </record>
 
-        <record id="filiere_ds" model="ensiasd.filiere">
-            <field name="name">Data Science</field>
-            <field name="code">DS</field>
-            <field name="description">Formation en Science des Données</field>
+        <record id="filiere_mgsi" model="ensiasd.filiere">
+            <field name="name">Management et Gouvernance des Systèmes d'Information</field>
+            <field name="code">MGSI</field>
+            <field name="description">Formation en Management et Gouvernance des Systèmes d'Information</field>
             <field name="niveau">ingenieur</field>
+            <field name="duree">3</field>
         </record>
 
-        <record id="filiere_bd" model="ensiasd.filiere">
-            <field name="name">Big Data</field>
-            <field name="code">BD</field>
-            <field name="description">Formation en Big Data</field>
+        <record id="filiere_il" model="ensiasd.filiere">
+            <field name="name">Ingénierie Logicielle</field>
+            <field name="code">IL</field>
+            <field name="description">Formation en Ingénierie Logicielle</field>
             <field name="niveau">ingenieur</field>
+            <field name="duree">3</field>
+        </record>
+
+        <record id="filiere_sitcn" model="ensiasd.filiere">
+            <field name="name">Sécurité IT et Confiance Numérique</field>
+            <field name="code">S IT&amp;CN</field>
+            <field name="description">Formation en Sécurité IT et Confiance Numérique</field>
+            <field name="niveau">ingenieur</field>
+            <field name="duree">3</field>
         </record>
     </data>
 </odoo>
