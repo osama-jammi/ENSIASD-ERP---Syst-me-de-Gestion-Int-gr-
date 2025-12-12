@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue liste des barèmes -->
+    <record id="view_ensiasd_bareme_tree" model="ir.ui.view">
+        <field name="name">ensiasd.bareme.tree</field>
+        <field name="model">ensiasd.bareme</field>
+        <field name="arch" type="xml">
+            <tree string="Barèmes">
+                <field name="module_id"/>
+                <field name="annee_id"/>
+                <field name="poids_cc"/>
+                <field name="poids_examen"/>
+                <field name="poids_tp"/>
+                <field name="poids_projet"/>
+                <field name="note_validation"/>
+                <field name="note_eliminatoire"/>
+                <field name="rattrapage_autorise"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire des barèmes -->
+    <record id="view_ensiasd_bareme_form" model="ir.ui.view">
+        <field name="name">ensiasd.bareme.form</field>
+        <field name="model">ensiasd.bareme</field>
+        <field name="arch" type="xml">
+            <form string="Barème de notation">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nom du barème"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Identification">
+                            <field name="module_id"/>
+                            <field name="annee_id"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group string="Pondérations (%)">
+                        <group>
+                            <field name="poids_cc"/>
+                            <field name="poids_examen"/>
+                        </group>
+                        <group>
+                            <field name="poids_tp"/>
+                            <field name="poids_projet"/>
+                        </group>
+                    </group>
+                    <group string="Seuils de notation">
+                        <group>
+                            <field name="note_validation"/>
+                            <field name="note_eliminatoire"/>
+                        </group>
+                        <group>
+                            <field name="bonus_max"/>
+                        </group>
+                    </group>
+                    <group string="Configuration CC">
+                        <group>
+                            <field name="nb_cc_prevu"/>
+                            <field name="meilleure_note_cc"/>
+                        </group>
+                    </group>
+                    <group string="Rattrapage">
+                        <group>
+                            <field name="rattrapage_autorise"/>
+                            <field name="note_rattrapage_remplace" 
+                                   invisible="not rattrapage_autorise"/>
+                        </group>
+                    </group>
+                    <field name="observations" placeholder="Observations..."/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue recherche -->
+    <record id="view_ensiasd_bareme_search" model="ir.ui.view">
+        <field name="name">ensiasd.bareme.search</field>
+        <field name="model">ensiasd.bareme</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher des barèmes">
+                <field name="module_id"/>
+                <field name="annee_id"/>
+                <separator/>
+                <filter name="filter_active" string="Actifs" domain="[('active', '=', True)]"/>
+                <filter name="filter_rattrapage" string="Avec rattrapage" 
+                        domain="[('rattrapage_autorise', '=', True)]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_annee" string="Année" context="{'group_by': 'annee_id'}"/>
+                    <filter name="group_module" string="Module" context="{'group_by': 'module_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ensiasd_bareme" model="ir.actions.act_window">
+        <field name="name">Barèmes de notation</field>
+        <field name="res_model">ensiasd.bareme</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_ensiasd_bareme_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer un nouveau barème
+            </p>
+            <p>
+                Les barèmes définissent les règles de calcul des notes pour chaque module.
+            </p>
+        </field>
+    </record>
+</odoo>

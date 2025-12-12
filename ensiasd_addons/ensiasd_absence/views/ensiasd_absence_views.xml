@@ -1,52 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Vue liste des absences -->
     <record id="view_ensiasd_absence_tree" model="ir.ui.view">
         <field name="name">ensiasd.absence.tree</field>
         <field name="model">ensiasd.absence</field>
         <field name="arch" type="xml">
-            <tree string="Absences" decoration-danger="state=='absent'">
+            <tree string="Absences" decoration-danger="state == 'absent'"
+                  decoration-warning="state == 'pending'"
+                  decoration-success="state in ['justified', 'excused']">
                 <field name="date"/>
                 <field name="student_id"/>
-                <field name="seance_id"/>
+                <field name="student_cne"/>
                 <field name="module_id"/>
+                <field name="type_seance"/>
+                <field name="enseignant_id"/>
+                <field name="heures_absence" sum="Total heures"/>
                 <field name="justifiee"/>
-                <field name="state" widget="badge"/>
+                <field name="state" widget="badge"
+                       decoration-danger="state in ['absent', 'rejected']"
+                       decoration-warning="state == 'pending'"
+                       decoration-success="state in ['justified', 'excused']"/>
             </tree>
         </field>
     </record>
 
+    <!-- Vue formulaire -->
     <record id="view_ensiasd_absence_form" model="ir.ui.view">
         <field name="name">ensiasd.absence.form</field>
         <field name="model">ensiasd.absence</field>
         <field name="arch" type="xml">
             <form string="Absence">
                 <header>
-                    <button name="action_justify" string="Justifier" type="object" invisible="state != 'absent'"/>
-                    <button name="action_excuse" string="Excuser" type="object" invisible="state == 'excused'"/>
-                    <field name="state" widget="statusbar"/>
+                    <button name="action_mark_pending" string="En attente" type="object"
+                            class="btn-secondary" invisible="state != 'absent'"/>
+                    <button name="action_justify" string="Valider justification" type="object"
+                            class="btn-success" invisible="state not in ['absent', 'pending']"/>
+                    <button name="action_excuse" string="Excuser" type="object"
+                            class="btn-primary" invisible="state not in ['absent', 'pending']"/>
+                    <button name="action_reject" string="Rejeter" type="object"
+                            class="btn-danger" invisible="state != 'pending'"/>
+                    <button name="action_reset" string="Réinitialiser" type="object"
+                            invisible="state == 'absent'"/>
+                    <button name="action_send_notification" string="Notifier l'étudiant" type="object"
+                            class="btn-secondary" icon="fa-envelope"/>
+                    <field name="state" widget="statusbar" statusbar_visible="absent,pending,justified"/>
                 </header>
                 <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
                     <group>
-                        <group>
+                        <group string="Étudiant">
                             <field name="student_id"/>
+                            <field name="student_cne" readonly="1"/>
+                            <field name="student_groupe" readonly="1"/>
+                        </group>
+                        <group string="Séance">
                             <field name="seance_id"/>
                             <field name="date" readonly="1"/>
-                        </group>
-                        <group>
-                            <field name="justifiee"/>
-                            <field name="justificatif" filename="justificatif_filename"/>
-                            <field name="justificatif_filename" invisible="1"/>
+                            <field name="module_id" readonly="1"/>
+                            <field name="element_id" readonly="1"/>
+                            <field name="type_seance" readonly="1"/>
+                            <field name="enseignant_id" readonly="1"/>
+                            <field name="heures_absence" readonly="1"/>
                         </group>
                     </group>
-                    <field name="motif"/>
+                    <group string="Justification">
+                        <field name="justifiee"/>
+                        <field name="motif"/>
+                        <field name="justificatif" filename="justificatif_filename"/>
+                        <field name="justificatif_filename" invisible="1"/>
+                        <field name="date_justification" readonly="1"/>
+                    </group>
+                    <group string="Notifications" invisible="not notification_sent">
+                        <field name="notification_sent" readonly="1"/>
+                        <field name="date_notification" readonly="1"/>
+                    </group>
+                    <field name="notes" placeholder="Notes internes..."/>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
 
+    <!-- Vue recherche -->
+    <record id="view_ensiasd_absence_search" model="ir.ui.view">
+        <field name="name">ensiasd.absence.search</field>
+        <field name="model">ensiasd.absence</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher">
+                <field name="student_id"/>
+                <field name="student_cne"/>
+                <field name="module_id"/>
+                <field name="enseignant_id"/>
+                <separator/>
+                <filter name="filter_absent" string="Non justifiées" domain="[('state', '=', 'absent')]"/>
+                <filter name="filter_pending" string="En attente" domain="[('state', '=', 'pending')]"/>
+                <filter name="filter_justified" string="Justifiées" domain="[('state', 'in', ['justified', 'excused'])]"/>
+                <separator/>
+                <filter name="filter_today" string="Aujourd'hui" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_week" string="Cette semaine" domain="[('date', '>=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_month" string="Ce mois" domain="[('date', '>=', context_today().strftime('%Y-%m-01'))]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_student" string="Étudiant" context="{'group_by': 'student_id'}"/>
+                    <filter name="group_module" string="Module" context="{'group_by': 'module_id'}"/>
+                    <filter name="group_date" string="Date" context="{'group_by': 'date:month'}"/>
+                    <filter name="group_state" string="État" context="{'group_by': 'state'}"/>
+                    <filter name="group_groupe" string="Groupe" context="{'group_by': 'student_groupe'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vue pivot -->
+    <record id="view_ensiasd_absence_pivot" model="ir.ui.view">
+        <field name="name">ensiasd.absence.pivot</field>
+        <field name="model">ensiasd.absence</field>
+        <field name="arch" type="xml">
+            <pivot string="Analyse des absences">
+                <field name="student_id" type="row"/>
+                <field name="module_id" type="col"/>
+                <field name="heures_absence" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Vue graphique -->
+    <record id="view_ensiasd_absence_graph" model="ir.ui.view">
+        <field name="name">ensiasd.absence.graph</field>
+        <field name="model">ensiasd.absence</field>
+        <field name="arch" type="xml">
+            <graph string="Statistiques absences" type="bar">
+                <field name="date" interval="week" type="row"/>
+                <field name="student_id" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Vue calendrier -->
+    <record id="view_ensiasd_absence_calendar" model="ir.ui.view">
+        <field name="name">ensiasd.absence.calendar</field>
+        <field name="model">ensiasd.absence</field>
+        <field name="arch" type="xml">
+            <calendar string="Absences" date_start="date" color="state" mode="month">
+                <field name="student_id"/>
+                <field name="module_id"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Action -->
     <record id="action_ensiasd_absence" model="ir.actions.act_window">
         <field name="name">Absences</field>
         <field name="res_model">ensiasd.absence</field>
+        <field name="view_mode">tree,form,pivot,graph,calendar</field>
+        <field name="search_view_id" ref="view_ensiasd_absence_search"/>
+        <field name="context">{'search_default_filter_month': 1}</field>
+    </record>
+
+    <!-- Action absences non justifiées -->
+    <record id="action_ensiasd_absence_unjustified" model="ir.actions.act_window">
+        <field name="name">Absences à traiter</field>
+        <field name="res_model">ensiasd.absence</field>
         <field name="view_mode">tree,form</field>
+        <field name="domain">[('state', 'in', ['absent', 'pending'])]</field>
     </record>
 </odoo>

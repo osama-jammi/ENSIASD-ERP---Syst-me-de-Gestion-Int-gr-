@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue formulaire du wizard d'import -->
+    <record id="view_note_import_wizard_form" model="ir.ui.view">
+        <field name="name">ensiasd.note.import.wizard.form</field>
+        <field name="model">ensiasd.note.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import des notes">
+                <group invisible="state != 'draft'">
+                    <group string="Configuration">
+                        <field name="session_id"/>
+                        <field name="module_id"/>
+                        <field name="type_eval"/>
+                    </group>
+                    <group string="Fichier">
+                        <field name="file_type"/>
+                        <field name="file" filename="filename"/>
+                        <field name="filename" invisible="1"/>
+                        <field name="delimiter" invisible="file_type != 'csv'"/>
+                        <field name="skip_header"/>
+                    </group>
+                    <group string="Mapping des colonnes">
+                        <field name="column_cne"/>
+                        <field name="column_note"/>
+                    </group>
+                </group>
+                
+                <group invisible="state == 'draft'">
+                    <group string="Résultat de l'import">
+                        <field name="import_count"/>
+                        <field name="error_count"/>
+                    </group>
+                </group>
+                
+                <field name="error_log" invisible="state == 'draft'" readonly="1"/>
+                
+                <field name="state" invisible="1"/>
+                
+                <footer>
+                    <button name="action_download_template" string="Télécharger modèle" 
+                            type="object" class="btn-secondary"
+                            invisible="state != 'draft' or not module_id"/>
+                    <button name="action_preview" string="Aperçu" type="object" 
+                            class="btn-secondary" invisible="state != 'draft'"/>
+                    <button name="action_import" string="Importer" type="object" 
+                            class="btn-primary" invisible="state != 'preview'"/>
+                    <button string="Fermer" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action pour ouvrir le wizard -->
+    <record id="action_note_import_wizard" model="ir.actions.act_window">
+        <field name="name">Importer des notes</field>
+        <field name="res_model">ensiasd.note.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu pour accéder au wizard -->
+    <menuitem id="menu_note_import"
+              name="Importer des notes"
+              parent="menu_grades_saisie"
+              action="action_note_import_wizard"
+              sequence="10"/>
+</odoo>

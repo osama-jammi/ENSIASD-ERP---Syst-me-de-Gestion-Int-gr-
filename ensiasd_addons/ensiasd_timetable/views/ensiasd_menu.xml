@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu principal Emploi du temps -->
+    <menuitem id="menu_ensiasd_timetable_root"
+              name="Emploi du temps"
+              sequence="35"/>
+
+    <!-- Sous-menu Planning -->
+    <menuitem id="menu_timetable_planning"
+              name="Planning"
+              parent="menu_ensiasd_timetable_root"
+              sequence="1"/>
+
+    <menuitem id="menu_ensiasd_emploi"
+              name="Emplois du temps"
+              parent="menu_timetable_planning"
+              action="action_ensiasd_emploi"
+              sequence="1"/>
+
+    <menuitem id="menu_ensiasd_seance_calendar"
+              name="Planning séances"
+              parent="menu_timetable_planning"
+              action="action_ensiasd_seance_calendar"
+              sequence="2"/>
+
+    <!-- Sous-menu Génération -->
+    <menuitem id="menu_timetable_generate"
+              name="Génération"
+              parent="menu_ensiasd_timetable_root"
+              sequence="10"
+              groups="ensiasd_timetable.group_timetable_manager"/>
+
+    <menuitem id="menu_generate_timetable_wizard"
+              name="Générer emploi du temps"
+              parent="menu_timetable_generate"
+              action="action_generate_timetable_wizard"
+              sequence="1"/>
+
+    <!-- Sous-menu Configuration -->
+    <menuitem id="menu_timetable_config"
+              name="Configuration"
+              parent="menu_ensiasd_timetable_root"
+              sequence="90"
+              groups="ensiasd_timetable.group_timetable_manager"/>
+
+    <menuitem id="menu_ensiasd_creneau"
+              name="Créneaux horaires"
+              parent="menu_timetable_config"
+              action="action_ensiasd_creneau"
+              sequence="1"/>
+
+    <menuitem id="menu_ensiasd_indisponibilite"
+              name="Indisponibilités"
+              parent="menu_timetable_config"
+              action="action_ensiasd_indisponibilite"
+              sequence="2"/>
+</odoo>

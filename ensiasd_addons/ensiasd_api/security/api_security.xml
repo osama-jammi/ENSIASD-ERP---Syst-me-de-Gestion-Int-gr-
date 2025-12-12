@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Groupe API Manager -->
+    <record id="group_ensiasd_api_manager" model="res.groups">
+        <field name="name">Gestionnaire API</field>
+        <field name="category_id" ref="ensiasd_core.module_category_ensiasd"/>
+        <field name="implied_ids" eval="[(4, ref('ensiasd_core.group_ensiasd_admin'))]"/>
+        <field name="comment">Gestion de l'API et des tokens</field>
+    </record>
+
+    <!-- Règles d'accès pour les tokens -->
+    <record id="rule_api_token_admin" model="ir.rule">
+        <field name="name">API Token - Admin full access</field>
+        <field name="model_id" ref="model_ensiasd_api_token"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('ensiasd_core.group_ensiasd_admin'))]"/>
+    </record>
+
+    <!-- Règles d'accès pour les logs -->
+    <record id="rule_api_log_admin" model="ir.rule">
+        <field name="name">API Log - Admin full access</field>
+        <field name="model_id" ref="model_ensiasd_api_log"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('ensiasd_core.group_ensiasd_admin'))]"/>
+    </record>
+</odoo>

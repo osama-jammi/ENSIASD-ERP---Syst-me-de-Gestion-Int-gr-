@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue liste des créneaux -->
+    <record id="view_ensiasd_creneau_tree" model="ir.ui.view">
+        <field name="name">ensiasd.creneau.tree</field>
+        <field name="model">ensiasd.creneau</field>
+        <field name="arch" type="xml">
+            <tree string="Créneaux horaires">
+                <field name="jour"/>
+                <field name="heure_debut" widget="float_time"/>
+                <field name="heure_fin" widget="float_time"/>
+                <field name="duree"/>
+                <field name="type_creneau"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire -->
+    <record id="view_ensiasd_creneau_form" model="ir.ui.view">
+        <field name="name">ensiasd.creneau.form</field>
+        <field name="model">ensiasd.creneau</field>
+        <field name="arch" type="xml">
+            <form string="Créneau horaire">
+                <sheet>
+                    <group>
+                        <group string="Horaire">
+                            <field name="jour"/>
+                            <field name="heure_debut" widget="float_time"/>
+                            <field name="heure_fin" widget="float_time"/>
+                            <field name="duree" readonly="1"/>
+                        </group>
+                        <group string="Options">
+                            <field name="type_creneau"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ensiasd_creneau" model="ir.actions.act_window">
+        <field name="name">Créneaux horaires</field>
+        <field name="res_model">ensiasd.creneau</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ensiasd_api_config_admin,ensiasd.api.config.admin,model_ensiasd_api_config,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_ensiasd_api_token_admin,ensiasd.api.token.admin,model_ensiasd_api_token,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_ensiasd_api_token_system,ensiasd.api.token.system,model_ensiasd_api_token,base.group_system,1,1,1,1
+access_ensiasd_api_log_admin,ensiasd.api.log.admin,model_ensiasd_api_log,ensiasd_core.group_ensiasd_admin,1,1,0,1
+access_ensiasd_api_log_scolarite,ensiasd.api.log.scolarite,model_ensiasd_api_log,ensiasd_core.group_ensiasd_scolarite,1,0,0,0
+access_set_api_password_wizard_admin,set.api.password.wizard.admin,model_set_api_password_wizard,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_set_api_password_wizard_scolarite,set.api.password.wizard.scolarite,model_set_api_password_wizard,ensiasd_core.group_ensiasd_scolarite,1,1,1,1

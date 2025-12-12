@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue liste des délibérations -->
+    <record id="view_ensiasd_deliberation_tree" model="ir.ui.view">
+        <field name="name">ensiasd.deliberation.tree</field>
+        <field name="model">ensiasd.deliberation</field>
+        <field name="arch" type="xml">
+            <tree string="Délibérations"
+                  decoration-success="state == 'published'"
+                  decoration-info="state == 'en_cours'">
+                <field name="name"/>
+                <field name="annee_id"/>
+                <field name="session_id"/>
+                <field name="filiere_id"/>
+                <field name="type_deliberation"/>
+                <field name="date"/>
+                <field name="nb_etudiants"/>
+                <field name="nb_admis"/>
+                <field name="taux_reussite" widget="progressbar"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire des délibérations -->
+    <record id="view_ensiasd_deliberation_form" model="ir.ui.view">
+        <field name="name">ensiasd.deliberation.form</field>
+        <field name="model">ensiasd.deliberation</field>
+        <field name="arch" type="xml">
+            <form string="Délibération">
+                <header>
+                    <button name="action_prepare" string="Préparer" type="object" 
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_start" string="Démarrer" type="object" 
+                            class="btn-primary" invisible="state != 'preparation'"/>
+                    <button name="action_validate" string="Valider" type="object" 
+                            class="btn-success" invisible="state != 'en_cours'"
+                            confirm="Êtes-vous sûr de vouloir valider ? Les notes seront verrouillées."/>
+                    <button name="action_sign" string="Signer" type="object" 
+                            class="btn-warning" invisible="state != 'validated'"/>
+                    <button name="action_publish" string="Publier" type="object" 
+                            class="btn-danger" invisible="state != 'signed'"
+                            confirm="Êtes-vous sûr de vouloir publier les résultats ?"/>
+                    <button name="action_reset_draft" string="Annuler" type="object" 
+                            invisible="state in ['draft', 'signed', 'published']"/>
+                    <button name="action_generate_pv" string="Générer PV" type="object" 
+                            class="btn-secondary" icon="fa-print"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="draft,preparation,en_cours,validated,signed,published"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_resultats" type="object"
+                                class="oe_stat_button" icon="fa-graduation-cap">
+                            <field name="nb_etudiants" string="Étudiants" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Informations générales">
+                            <field name="annee_id"/>
+                            <field name="session_id"/>
+                            <field name="filiere_id"/>
+                            <field name="type_deliberation"/>
+                            <field name="date"/>
+                            <field name="lieu"/>
+                        </group>
+                        <group string="Jury">
+                            <field name="president_id"/>
+                            <field name="secretaire_id"/>
+                            <field name="membre_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group string="Statistiques">
+                        <group>
+                            <field name="nb_etudiants"/>
+                            <field name="nb_admis"/>
+                            <field name="nb_ajournes"/>
+                            <field name="nb_rattrapage"/>
+                        </group>
+                        <group>
+                            <field name="taux_reussite" widget="percentage"/>
+                            <field name="moyenne_promo"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Résultats par étudiant" name="lines">
+                            <field name="deliberation_line_ids">
+                                <tree editable="bottom"
+                                      decoration-success="decision_finale in ['admis', 'admis_compensation']"
+                                      decoration-danger="decision_finale in ['ajourne', 'exclus']"
+                                      decoration-warning="decision_finale == 'rattrapage'"
+                                      decoration-bf="is_modified">
+                                    <field name="rang"/>
+                                    <field name="student_id" readonly="1"/>
+                                    <field name="moyenne" readonly="1"/>
+                                    <field name="decision_auto" readonly="1"/>
+                                    <field name="decision_finale"/>
+                                    <field name="is_modified" invisible="1"/>
+                                    <field name="observation"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="PV et observations" name="pv">
+                            <group>
+                                <field name="pv_observations" placeholder="Observations du procès-verbal..."/>
+                                <field name="pv_decisions" placeholder="Décisions particulières..."/>
+                            </group>
+                        </page>
+                        <page string="Validation" name="validation">
+                            <group>
+                                <field name="validated_by" readonly="1"/>
+                                <field name="validated_date" readonly="1"/>
+                                <field name="date_signature" readonly="1"/>
+                                <field name="date_publication" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue recherche -->
+    <record id="view_ensiasd_deliberation_search" model="ir.ui.view">
+        <field name="name">ensiasd.deliberation.search</field>
+        <field name="model">ensiasd.deliberation</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher des délibérations">
+                <field name="name"/>
+                <field name="annee_id"/>
+                <field name="filiere_id"/>
+                <separator/>
+                <filter name="filter_draft" string="Brouillon" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_en_cours" string="En cours" domain="[('state', '=', 'en_cours')]"/>
+                <filter name="filter_validated" string="Validées" domain="[('state', '=', 'validated')]"/>
+                <filter name="filter_published" string="Publiées" domain="[('state', '=', 'published')]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_annee" string="Année" context="{'group_by': 'annee_id'}"/>
+                    <filter name="group_filiere" string="Filière" context="{'group_by': 'filiere_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by': 'type_deliberation'}"/>
+                    <filter name="group_state" string="État" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vue calendrier -->
+    <record id="view_ensiasd_deliberation_calendar" model="ir.ui.view">
+        <field name="name">ensiasd.deliberation.calendar</field>
+        <field name="model">ensiasd.deliberation</field>
+        <field name="arch" type="xml">
+            <calendar string="Calendrier des délibérations" date_start="date" color="filiere_id">
+                <field name="name"/>
+                <field name="filiere_id"/>
+                <field name="type_deliberation"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ensiasd_deliberation" model="ir.actions.act_window">
+        <field name="name">Délibérations</field>
+        <field name="res_model">ensiasd.deliberation</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="search_view_id" ref="view_ensiasd_deliberation_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer une nouvelle délibération
+            </p>
+            <p>
+                Les délibérations permettent de valider officiellement les résultats des étudiants.
+            </p>
+        </field>
+    </record>
+</odoo>

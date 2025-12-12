@@ -34,7 +34,7 @@
     ],
     
     'installable': True,
-    'application': False,  # PAS une application - juste un module de base
+    'application': False,  # module de base
     'auto_install': False,
     'sequence': 1,
 }

@@ -1,13 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_ensiasd_absences"
+    <!-- Menu principal Absences -->
+    <menuitem id="menu_ensiasd_absence_root"
               name="Absences"
-              parent="ensiasd_academic.menu_ensiasd_academic_root"
-              sequence="11"/>
+              sequence="45"/>
 
-    <menuitem id="menu_ensiasd_absence_list"
-              name="Gestion des absences"
-              parent="menu_ensiasd_absences"
+    <!-- Sous-menu Gestion -->
+    <menuitem id="menu_absence_gestion"
+              name="Gestion"
+              parent="menu_ensiasd_absence_root"
+              sequence="1"/>
+
+    <menuitem id="menu_ensiasd_absence"
+              name="Toutes les absences"
+              parent="menu_absence_gestion"
+              action="action_ensiasd_absence"
+              sequence="1"/>
+
+    <menuitem id="menu_ensiasd_absence_unjustified"
+              name="À traiter"
+              parent="menu_absence_gestion"
+              action="action_ensiasd_absence_unjustified"
+              sequence="2"/>
+
+    <!-- Sous-menu Actions -->
+    <menuitem id="menu_absence_actions"
+              name="Actions"
+              parent="menu_ensiasd_absence_root"
+              sequence="10"/>
+
+    <menuitem id="menu_send_appel_wizard"
+              name="Envoyer formulaires d'appel"
+              parent="menu_absence_actions"
+              action="action_send_appel_wizard"
+              sequence="1"/>
+
+    <!-- Sous-menu Statistiques -->
+    <menuitem id="menu_absence_stats"
+              name="Statistiques"
+              parent="menu_ensiasd_absence_root"
+              sequence="20"/>
+
+    <menuitem id="menu_absence_analysis"
+              name="Analyse des absences"
+              parent="menu_absence_stats"
               action="action_ensiasd_absence"
               sequence="1"/>
 </odoo>

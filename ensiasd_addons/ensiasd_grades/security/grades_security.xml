@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Groupes de sécurité -->
+    <record id="group_grades_user" model="res.groups">
+        <field name="name">Notes: Utilisateur</field>
+        <field name="category_id" ref="ensiasd_core.module_category_ensiasd"/>
+        <field name="implied_ids" eval="[(4, ref('ensiasd_core.group_ensiasd_student'))]"/>
+    </record>
+
+    <record id="group_grades_enseignant" model="res.groups">
+        <field name="name">Notes: Enseignant</field>
+        <field name="category_id" ref="ensiasd_core.module_category_ensiasd"/>
+        <field name="implied_ids" eval="[(4, ref('group_grades_user'))]"/>
+        <field name="comment">Peut saisir et modifier les notes de ses modules</field>
+    </record>
+
+    <record id="group_grades_responsable" model="res.groups">
+        <field name="name">Notes: Responsable pédagogique</field>
+        <field name="category_id" ref="ensiasd_core.module_category_ensiasd"/>
+        <field name="implied_ids" eval="[(4, ref('group_grades_enseignant'))]"/>
+        <field name="comment">Peut valider les notes et participer aux délibérations</field>
+    </record>
+
+    <record id="group_grades_admin" model="res.groups">
+        <field name="name">Notes: Administrateur</field>
+        <field name="category_id" ref="ensiasd_core.module_category_ensiasd"/>
+        <field name="implied_ids" eval="[(4, ref('group_grades_responsable'))]"/>
+        <field name="comment">Accès complet à la gestion des notes</field>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <!-- Règles d'accès basiques - permettre la lecture pour tous les utilisateurs -->
+    <record id="rule_note_global_read" model="ir.rule">
+        <field name="name">Notes: Lecture globale</field>
+        <field name="model_id" ref="model_ensiasd_note"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Les admins ont accès complet à tout -->
+    <record id="rule_note_admin" model="ir.rule">
+        <field name="name">Notes: Admin - Tout</field>
+        <field name="model_id" ref="model_ensiasd_note"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_grades_admin'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Les enseignants peuvent modifier les notes -->
+    <record id="rule_note_enseignant" model="ir.rule">
+        <field name="name">Notes: Enseignant - Écriture</field>
+        <field name="model_id" ref="model_ensiasd_note"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_grades_enseignant'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Règles pour les autres modèles -->
+    <record id="rule_session_global" model="ir.rule">
+        <field name="name">Session: Lecture globale</field>
+        <field name="model_id" ref="model_ensiasd_session"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_bareme_global" model="ir.rule">
+        <field name="name">Bareme: Lecture globale</field>
+        <field name="model_id" ref="model_ensiasd_bareme"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_resultat_global" model="ir.rule">
+        <field name="name">Resultat: Lecture globale</field>
+        <field name="model_id" ref="model_ensiasd_resultat"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_bulletin_global" model="ir.rule">
+        <field name="name">Bulletin: Lecture globale</field>
+        <field name="model_id" ref="model_ensiasd_bulletin"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_deliberation_global" model="ir.rule">
+        <field name="name">Deliberation: Lecture globale</field>
+        <field name="model_id" ref="model_ensiasd_deliberation"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+</odoo>

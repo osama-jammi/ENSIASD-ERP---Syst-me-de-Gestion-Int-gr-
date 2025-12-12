@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Définition du rapport PV de délibération -->
+    <record id="action_report_pv_deliberation" model="ir.actions.report">
+        <field name="name">PV de délibération</field>
+        <field name="model">ensiasd.deliberation</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ensiasd_grades.report_pv_deliberation_template</field>
+        <field name="report_file">ensiasd_grades.report_pv_deliberation_template</field>
+        <field name="print_report_name">'PV_Deliberation_%s' % object.name</field>
+        <field name="binding_model_id" ref="model_ensiasd_deliberation"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <!-- Template du PV -->
+    <template id="report_pv_deliberation_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- En-tête -->
+                        <div class="row" style="margin-bottom: 20px;">
+                            <div class="col-12 text-center">
+                                <h2>PROCÈS-VERBAL DE DÉLIBÉRATION</h2>
+                                <h4><t t-esc="doc.name"/></h4>
+                            </div>
+                        </div>
+
+                        <!-- Informations de la délibération -->
+                        <div class="row" style="margin-bottom: 20px; border: 1px solid #ddd; padding: 15px;">
+                            <div class="col-6">
+                                <p><strong>Année académique:</strong> <t t-esc="doc.annee_id.name"/></p>
+                                <p><strong>Session:</strong> <t t-esc="doc.session_id.name"/></p>
+                                <p><strong>Filière:</strong> <t t-esc="doc.filiere_id.name"/></p>
+                                <p><strong>Type:</strong> <t t-esc="dict(doc._fields['type_deliberation'].selection).get(doc.type_deliberation)"/></p>
+                            </div>
+                            <div class="col-6">
+                                <p><strong>Date:</strong> <t t-esc="doc.date.strftime('%d/%m/%Y à %H:%M')"/></p>
+                                <p><strong>Lieu:</strong> <t t-esc="doc.lieu" t-if="doc.lieu"/></p>
+                            </div>
+                        </div>
+
+                        <!-- Composition du jury -->
+                        <div class="row" style="margin-bottom: 20px;">
+                            <div class="col-12">
+                                <h5 style="background-color: #e0e0e0; padding: 8px;">Composition du jury</h5>
+                                <ul>
+                                    <li t-if="doc.president_id"><strong>Président:</strong> <t t-esc="doc.president_id.name"/></li>
+                                    <t t-foreach="doc.membre_ids" t-as="membre">
+                                        <li><strong>Membre:</strong> <t t-esc="membre.name"/></li>
+                                    </t>
+                                    <li t-if="doc.secretaire_id"><strong>Secrétaire:</strong> <t t-esc="doc.secretaire_id.name"/></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Statistiques -->
+                        <div class="row" style="margin-bottom: 20px;">
+                            <div class="col-12">
+                                <h5 style="background-color: #e0e0e0; padding: 8px;">Statistiques</h5>
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td><strong>Nombre d'étudiants</strong></td>
+                                        <td class="text-center"><t t-esc="doc.nb_etudiants"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Admis</strong></td>
+                                        <td class="text-center" style="color: green;"><t t-esc="doc.nb_admis"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Ajournés</strong></td>
+                                        <td class="text-center" style="color: red;"><t t-esc="doc.nb_ajournes"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>En rattrapage</strong></td>
+                                        <td class="text-center" style="color: orange;"><t t-esc="doc.nb_rattrapage"/></td>
+                                    </tr>
+                                    <tr style="font-weight: bold;">
+                                        <td><strong>Taux de réussite</strong></td>
+                                        <td class="text-center"><t t-esc="'%.1f' % doc.taux_reussite"/>%</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Moyenne de la promotion</strong></td>
+                                        <td class="text-center"><t t-esc="'%.2f' % doc.moyenne_promo"/>/20</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Liste des résultats -->
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 style="background-color: #e0e0e0; padding: 8px;">Résultats par étudiant</h5>
+                                <table class="table table-bordered table-sm" style="font-size: 9px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Rang</th>
+                                            <th>Matricule</th>
+                                            <th>Nom et prénom</th>
+                                            <th class="text-center">Moyenne</th>
+                                            <th class="text-center">Décision</th>
+                                            <th>Observation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="doc.deliberation_line_ids.sorted(key=lambda l: l.rang)" t-as="line">
+                                            <tr t-attf-style="background-color: {{ 'lightgreen' if line.decision_finale in ['admis', 'admis_compensation'] else ('lightyellow' if line.decision_finale == 'rattrapage' else ('lightcoral' if line.decision_finale in ['ajourne', 'exclus'] else 'white')) }};">
+                                                <td><t t-esc="line.rang"/></td>
+                                                <td><t t-esc="line.student_id.matricule"/></td>
+                                                <td><t t-esc="line.student_id.name"/></td>
+                                                <td class="text-center"><t t-esc="'%.2f' % line.moyenne"/></td>
+                                                <td class="text-center">
+                                                    <t t-esc="dict(line._fields['decision_finale'].selection).get(line.decision_finale)"/>
+                                                    <span t-if="line.is_modified" style="color: blue;"> *</span>
+                                                </td>
+                                                <td><t t-esc="line.observation" t-if="line.observation"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <p style="font-size: 8px; font-style: italic;">* Décision modifiée par le jury</p>
+                            </div>
+                        </div>
+
+                        <!-- Observations du PV -->
+                        <div t-if="doc.pv_observations or doc.pv_decisions" style="margin-top: 20px;">
+                            <h5 style="background-color: #e0e0e0; padding: 8px;">Observations et décisions particulières</h5>
+                            <p t-if="doc.pv_observations"><t t-esc="doc.pv_observations"/></p>
+                            <p t-if="doc.pv_decisions"><strong>Décisions:</strong> <t t-esc="doc.pv_decisions"/></p>
+                        </div>
+
+                        <!-- Signatures -->
+                        <div class="row" style="margin-top: 50px; page-break-inside: avoid;">
+                            <div class="col-12 text-center" style="margin-bottom: 20px;">
+                                <p>Fait à ........................... le <t t-esc="doc.date.strftime('%d/%m/%Y')"/></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 text-center">
+                                <p><strong>Le Secrétaire</strong></p>
+                                <br/><br/><br/>
+                                <p t-if="doc.secretaire_id"><t t-esc="doc.secretaire_id.name"/></p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p><strong>Les Membres</strong></p>
+                                <br/><br/><br/>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p><strong>Le Président</strong></p>
+                                <br/><br/><br/>
+                                <p t-if="doc.president_id"><t t-esc="doc.president_id.name"/></p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ensiasd_api_config_form" model="ir.ui.view">
+        <field name="name">ensiasd.api.config.form</field>
+        <field name="model">ensiasd.api.config</field>
+        <field name="arch" type="xml">
+            <form string="Configuration API">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_logs" type="object" class="oe_stat_button" icon="fa-list">
+                            <field name="total_requests" widget="statinfo" string="Requêtes"/>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-key">
+                            <field name="active_tokens" widget="statinfo" string="Tokens actifs"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    
+                    <group string="Clés API">
+                        <group>
+                            <field name="api_key"/>
+                            <field name="api_secret" password="True"/>
+                        </group>
+                        <group>
+                            <button name="action_generate_keys" type="object" 
+                                    string="Générer nouvelles clés" class="btn-warning"
+                                    confirm="Attention: cela invalidera l'ancienne clé API. Continuer?"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Paramètres">
+                        <group>
+                            <field name="token_expiry_hours"/>
+                            <field name="max_requests_per_minute"/>
+                        </group>
+                        <group>
+                            <field name="enable_logging"/>
+                            <field name="log_retention_days" invisible="not enable_logging"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Fonctionnalités activées">
+                        <group>
+                            <field name="enable_notes"/>
+                            <field name="enable_absences"/>
+                        </group>
+                        <group>
+                            <field name="enable_emploi_temps"/>
+                            <field name="enable_stages"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Maintenance">
+                        <button name="action_cleanup_logs" type="object" 
+                                string="Nettoyer anciens logs" class="btn-secondary"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ensiasd_api_config" model="ir.actions.act_window">
+        <field name="name">Configuration API</field>
+        <field name="res_model">ensiasd.api.config</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="res_id" ref="default_api_config"/>
+    </record>
+</odoo>

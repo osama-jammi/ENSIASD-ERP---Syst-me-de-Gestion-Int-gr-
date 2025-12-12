@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue formulaire du wizard de saisie -->
+    <record id="view_note_saisie_wizard_form" model="ir.ui.view">
+        <field name="name">ensiasd.note.saisie.wizard.form</field>
+        <field name="model">ensiasd.note.saisie.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Saisie rapide des notes">
+                <!-- Configuration -->
+                <group invisible="state != 'config'">
+                    <group string="Session et module">
+                        <field name="session_id"/>
+                        <field name="module_id"/>
+                        <field name="element_id"/>
+                    </group>
+                    <group string="Évaluation">
+                        <field name="type_eval"/>
+                        <field name="date_eval"/>
+                    </group>
+                </group>
+                
+                <!-- Saisie -->
+                <group invisible="state != 'saisie'">
+                    <div class="alert alert-info" role="alert">
+                        <strong>Module:</strong> <field name="module_id" readonly="1" class="oe_inline"/>
+                        - <strong>Type:</strong> <field name="type_eval" readonly="1" class="oe_inline"/>
+                        <br/>
+                        <strong>Notes saisies:</strong> <field name="notes_count" class="oe_inline"/>
+                        - <strong>Moyenne:</strong> <field name="average" class="oe_inline"/>
+                    </div>
+                    
+                    <field name="line_ids">
+                        <tree editable="bottom">
+                            <field name="student_cne"/>
+                            <field name="student_name"/>
+                            <field name="note"/>
+                            <field name="is_absent"/>
+                        </tree>
+                    </field>
+                </group>
+                
+                <!-- Terminé -->
+                <group invisible="state != 'done'">
+                    <div class="alert alert-success" role="alert">
+                        <h4>Import terminé!</h4>
+                        <p><field name="notes_count" class="oe_inline"/> notes ont été enregistrées.</p>
+                        <p>Moyenne: <field name="average" class="oe_inline"/>/20</p>
+                    </div>
+                </group>
+                
+                <field name="state" invisible="1"/>
+                
+                <footer>
+                    <button name="action_load_students" string="Charger les étudiants" 
+                            type="object" class="btn-primary"
+                            invisible="state != 'config'"/>
+                    <button name="action_back" string="Retour" type="object" 
+                            class="btn-secondary" invisible="state != 'saisie'"/>
+                    <button name="action_save_notes" string="Enregistrer" type="object" 
+                            class="btn-primary" invisible="state != 'saisie'"/>
+                    <button string="Fermer" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action pour ouvrir le wizard -->
+    <record id="action_note_saisie_wizard" model="ir.actions.act_window">
+        <field name="name">Saisie rapide</field>
+        <field name="res_model">ensiasd.note.saisie.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu pour accéder au wizard -->
+    <menuitem id="menu_note_saisie"
+              name="Saisie rapide"
+              parent="menu_grades_saisie"
+              action="action_note_saisie_wizard"
+              sequence="5"/>
+</odoo>

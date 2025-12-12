@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue wizard génération emploi du temps -->
+    <record id="view_generate_timetable_wizard_form" model="ir.ui.view">
+        <field name="name">ensiasd.generate.timetable.wizard.form</field>
+        <field name="model">ensiasd.generate.timetable.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Générer un emploi du temps">
+                <group invisible="state != 'config'">
+                    <group string="Sélection">
+                        <field name="filiere_id"/>
+                        <field name="semestre"/>
+                        <field name="annee_id"/>
+                    </group>
+                    <group string="Période">
+                        <field name="date_debut"/>
+                        <field name="date_fin"/>
+                        <field name="groupe_ids" widget="many2many_tags"/>
+                    </group>
+                    <group string="Options de génération">
+                        <field name="max_heures_jour"/>
+                        <field name="eviter_trous"/>
+                        <field name="priorite_tp"/>
+                    </group>
+                </group>
+                <group invisible="state != 'done'">
+                    <div class="alert alert-success" role="alert">
+                        <h4>Emploi du temps généré avec succès!</h4>
+                        <p>Cliquez sur "Voir l'emploi du temps" pour le consulter et le modifier.</p>
+                    </div>
+                    <field name="emploi_id" readonly="1"/>
+                </group>
+                <field name="state" invisible="1"/>
+                <footer>
+                    <button name="action_generate" string="Générer" type="object"
+                            class="btn-primary" invisible="state != 'config'"/>
+                    <button name="action_view_emploi" string="Voir l'emploi du temps" type="object"
+                            class="btn-success" invisible="state != 'done'"/>
+                    <button string="Fermer" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action wizard -->
+    <record id="action_generate_timetable_wizard" model="ir.actions.act_window">
+        <field name="name">Générer un emploi du temps</field>
+        <field name="res_model">ensiasd.generate.timetable.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

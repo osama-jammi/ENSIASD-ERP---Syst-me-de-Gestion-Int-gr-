@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue liste des notes par élément -->
+    <record id="view_ensiasd_note_element_tree" model="ir.ui.view">
+        <field name="name">ensiasd.note.element.tree</field>
+        <field name="model">ensiasd.note.element</field>
+        <field name="arch" type="xml">
+            <tree string="Notes par élément" editable="bottom"
+                  decoration-danger="is_absent and not is_justified"
+                  decoration-warning="is_absent and is_justified">
+                <field name="student_id"/>
+                <field name="module_id"/>
+                <field name="element_id"/>
+                <field name="type_eval"/>
+                <field name="valeur"/>
+                <field name="coefficient"/>
+                <field name="is_absent"/>
+                <field name="is_justified" invisible="not is_absent"/>
+                <field name="date_eval"/>
+                <field name="enseignant_id"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire des notes par élément -->
+    <record id="view_ensiasd_note_element_form" model="ir.ui.view">
+        <field name="name">ensiasd.note.element.form</field>
+        <field name="model">ensiasd.note.element</field>
+        <field name="arch" type="xml">
+            <form string="Note par élément">
+                <header>
+                    <button name="action_confirm" string="Confirmer" type="object" 
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_validate" string="Valider" type="object" 
+                            class="btn-success" invisible="state != 'confirmed'"/>
+                    <button name="action_reset_draft" string="Remettre en brouillon" 
+                            type="object" invisible="state in ['draft', 'locked']"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Identification">
+                            <field name="inscription_id"/>
+                            <field name="student_id" readonly="1"/>
+                            <field name="module_id" readonly="1"/>
+                            <field name="element_id"/>
+                            <field name="session_id"/>
+                        </group>
+                        <group string="Évaluation">
+                            <field name="type_eval"/>
+                            <field name="valeur"/>
+                            <field name="coefficient"/>
+                            <field name="date_eval"/>
+                            <field name="enseignant_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Absence">
+                            <field name="is_absent"/>
+                            <field name="is_justified" invisible="not is_absent"/>
+                        </group>
+                    </group>
+                    <field name="observations" placeholder="Observations..."/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue recherche -->
+    <record id="view_ensiasd_note_element_search" model="ir.ui.view">
+        <field name="name">ensiasd.note.element.search</field>
+        <field name="model">ensiasd.note.element</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher des notes par élément">
+                <field name="student_id"/>
+                <field name="module_id"/>
+                <field name="element_id"/>
+                <field name="type_eval"/>
+                <separator/>
+                <filter name="filter_absent" string="Absents" domain="[('is_absent', '=', True)]"/>
+                <filter name="filter_absent_justified" string="Absences justifiées" 
+                        domain="[('is_absent', '=', True), ('is_justified', '=', True)]"/>
+                <separator/>
+                <filter name="filter_cc" string="CC" domain="[('type_eval', 'in', ['cc1', 'cc2', 'cc3'])]"/>
+                <filter name="filter_examen" string="Examens" domain="[('type_eval', '=', 'examen')]"/>
+                <filter name="filter_tp" string="TP" domain="[('type_eval', '=', 'tp')]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_student" string="Étudiant" context="{'group_by': 'student_id'}"/>
+                    <filter name="group_module" string="Module" context="{'group_by': 'module_id'}"/>
+                    <filter name="group_element" string="Élément" context="{'group_by': 'element_id'}"/>
+                    <filter name="group_type" string="Type d'évaluation" context="{'group_by': 'type_eval'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ensiasd_note_element" model="ir.actions.act_window">
+        <field name="name">Notes par élément</field>
+        <field name="res_model">ensiasd.note.element</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_ensiasd_note_element_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune note saisie
+            </p>
+            <p>
+                Saisissez les notes détaillées par élément de module.
+            </p>
+        </field>
+    </record>
+</odoo>

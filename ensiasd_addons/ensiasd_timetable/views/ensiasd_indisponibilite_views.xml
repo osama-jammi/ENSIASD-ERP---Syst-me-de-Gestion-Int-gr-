@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue liste des indisponibilités -->
+    <record id="view_ensiasd_indisponibilite_tree" model="ir.ui.view">
+        <field name="name">ensiasd.indisponibilite.tree</field>
+        <field name="model">ensiasd.indisponibilite</field>
+        <field name="arch" type="xml">
+            <tree string="Indisponibilités" decoration-danger="state == 'cancelled'"
+                  decoration-info="state == 'draft'">
+                <field name="name"/>
+                <field name="type_ressource"/>
+                <field name="enseignant_id" invisible="type_ressource != 'enseignant'"/>
+                <field name="salle_id" invisible="type_ressource != 'salle'"/>
+                <field name="type_indispo"/>
+                <field name="jour" invisible="type_indispo != 'recurring'"/>
+                <field name="date_debut" invisible="type_indispo != 'ponctuelle'"/>
+                <field name="date_fin" invisible="type_indispo != 'ponctuelle'"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire -->
+    <record id="view_ensiasd_indisponibilite_form" model="ir.ui.view">
+        <field name="name">ensiasd.indisponibilite.form</field>
+        <field name="model">ensiasd.indisponibilite</field>
+        <field name="arch" type="xml">
+            <form string="Indisponibilité">
+                <header>
+                    <button name="action_confirm" string="Confirmer" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_cancel" string="Annuler" type="object"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_draft" string="Remettre en brouillon" type="object"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Ressource">
+                            <field name="name"/>
+                            <field name="type_ressource" widget="radio"/>
+                            <field name="enseignant_id" invisible="type_ressource != 'enseignant'"
+                                   required="type_ressource == 'enseignant'"/>
+                            <field name="salle_id" invisible="type_ressource != 'salle'"
+                                   required="type_ressource == 'salle'"/>
+                        </group>
+                        <group string="Type">
+                            <field name="type_indispo" widget="radio"/>
+                            <field name="annee_id"/>
+                        </group>
+                    </group>
+                    <group invisible="type_indispo != 'recurring'">
+                        <group string="Récurrence">
+                            <field name="jour" required="type_indispo == 'recurring'"/>
+                            <field name="heure_debut" widget="float_time"/>
+                            <field name="heure_fin" widget="float_time"/>
+                        </group>
+                    </group>
+                    <group invisible="type_indispo != 'ponctuelle'">
+                        <group string="Période">
+                            <field name="date_debut" required="type_indispo == 'ponctuelle'"/>
+                            <field name="date_fin"/>
+                            <field name="journee_complete"/>
+                        </group>
+                        <group string="Horaire" invisible="journee_complete">
+                            <field name="heure_debut" widget="float_time"/>
+                            <field name="heure_fin" widget="float_time"/>
+                        </group>
+                    </group>
+                    <field name="notes" placeholder="Notes..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue recherche -->
+    <record id="view_ensiasd_indisponibilite_search" model="ir.ui.view">
+        <field name="name">ensiasd.indisponibilite.search</field>
+        <field name="model">ensiasd.indisponibilite</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher">
+                <field name="enseignant_id"/>
+                <field name="salle_id"/>
+                <separator/>
+                <filter name="filter_enseignant" string="Enseignants" domain="[('type_ressource', '=', 'enseignant')]"/>
+                <filter name="filter_salle" string="Salles" domain="[('type_ressource', '=', 'salle')]"/>
+                <separator/>
+                <filter name="filter_confirmed" string="Confirmées" domain="[('state', '=', 'confirmed')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_enseignant" string="Enseignant" context="{'group_by': 'enseignant_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by': 'type_indispo'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ensiasd_indisponibilite" model="ir.actions.act_window">
+        <field name="name">Indisponibilités</field>
+        <field name="res_model">ensiasd.indisponibilite</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_ensiasd_indisponibilite_search"/>
+    </record>
+</odoo>

@@ -20,7 +20,7 @@
     
     'depends': [
         'ensiasd_core',
-        'contacts',  # Intégration avec le module Contacts Odoo
+        'contacts',  
         'mail',
     ],
     
@@ -33,10 +33,8 @@
     ],
     
     'installable': True,
-    'application': True,  # <<<< C'EST UNE APPLICATION avec icône
+    'application': True,
     'auto_install': False,
     'sequence': 2,
-    
-    # Icône de l'application (sera visible dans le menu principal)
-    # Créer un fichier icon.png dans static/description/
+
 }

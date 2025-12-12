@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue liste des résultats -->
+    <record id="view_ensiasd_resultat_tree" model="ir.ui.view">
+        <field name="name">ensiasd.resultat.tree</field>
+        <field name="model">ensiasd.resultat</field>
+        <field name="arch" type="xml">
+            <tree string="Résultats" 
+                  decoration-success="decision in ['admis', 'admis_compensation']"
+                  decoration-danger="decision in ['ajourne', 'exclus']"
+                  decoration-warning="decision == 'rattrapage'">
+                <field name="student_id"/>
+                <field name="annee_id"/>
+                <field name="type_resultat"/>
+                <field name="filiere_id"/>
+                <field name="moyenne_ponderee" decoration-bf="1"/>
+                <field name="credits_valides"/>
+                <field name="total_credits"/>
+                <field name="nb_modules_valides"/>
+                <field name="nb_modules"/>
+                <field name="rang"/>
+                <field name="decision" widget="badge"/>
+                <field name="mention"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire des résultats -->
+    <record id="view_ensiasd_resultat_form" model="ir.ui.view">
+        <field name="name">ensiasd.resultat.form</field>
+        <field name="model">ensiasd.resultat</field>
+        <field name="arch" type="xml">
+            <form string="Résultat">
+                <header>
+                    <button name="action_calculate" string="Calculer" type="object" 
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_validate" string="Valider" type="object" 
+                            class="btn-success" invisible="state != 'calculated'"/>
+                    <button name="action_lock" string="Verrouiller" type="object" 
+                            class="btn-warning" invisible="state != 'validated'"
+                            groups="ensiasd_grades.group_grades_admin"/>
+                    <button name="action_reset_draft" string="Remettre en brouillon" 
+                            type="object" invisible="state in ['draft', 'locked']"/>
+                    <button name="determine_decision" string="Déterminer décision" 
+                            type="object" class="btn-secondary"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Identification">
+                            <field name="student_id"/>
+                            <field name="annee_id"/>
+                            <field name="type_resultat"/>
+                            <field name="filiere_id"/>
+                            <field name="session_id"/>
+                        </group>
+                        <group string="Moyennes">
+                            <field name="moyenne_generale"/>
+                            <field name="moyenne_ponderee" class="oe_inline"/>
+                            <field name="rang"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Crédits">
+                            <field name="total_credits"/>
+                            <field name="credits_valides"/>
+                            <field name="credits_non_valides"/>
+                        </group>
+                        <group string="Modules">
+                            <field name="nb_modules"/>
+                            <field name="nb_modules_valides"/>
+                            <field name="nb_modules_non_valides"/>
+                            <field name="nb_modules_rattrapage"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Décision">
+                            <field name="decision"/>
+                            <field name="mention"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes" name="notes">
+                            <field name="note_ids" readonly="1">
+                                <tree>
+                                    <field name="module_id"/>
+                                    <field name="note_finale"/>
+                                    <field name="resultat"/>
+                                    <field name="mention"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Observations" name="observations">
+                            <field name="observations" placeholder="Observations..."/>
+                            <field name="decision_jury" placeholder="Décision du jury..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue recherche -->
+    <record id="view_ensiasd_resultat_search" model="ir.ui.view">
+        <field name="name">ensiasd.resultat.search</field>
+        <field name="model">ensiasd.resultat</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher des résultats">
+                <field name="student_id"/>
+                <field name="annee_id"/>
+                <field name="filiere_id"/>
+                <separator/>
+                <filter name="filter_admis" string="Admis" 
+                        domain="[('decision', 'in', ['admis', 'admis_compensation'])]"/>
+                <filter name="filter_ajourne" string="Ajournés" 
+                        domain="[('decision', 'in', ['ajourne', 'redoublant', 'exclus'])]"/>
+                <filter name="filter_rattrapage" string="Rattrapage" 
+                        domain="[('decision', '=', 'rattrapage')]"/>
+                <separator/>
+                <filter name="filter_semestre1" string="S1" domain="[('type_resultat', '=', 'S1')]"/>
+                <filter name="filter_semestre2" string="S2" domain="[('type_resultat', '=', 'S2')]"/>
+                <filter name="filter_annee" string="Année" domain="[('type_resultat', '=', 'annee')]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_annee" string="Année" context="{'group_by': 'annee_id'}"/>
+                    <filter name="group_filiere" string="Filière" context="{'group_by': 'filiere_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by': 'type_resultat'}"/>
+                    <filter name="group_decision" string="Décision" context="{'group_by': 'decision'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vue pivot -->
+    <record id="view_ensiasd_resultat_pivot" model="ir.ui.view">
+        <field name="name">ensiasd.resultat.pivot</field>
+        <field name="model">ensiasd.resultat</field>
+        <field name="arch" type="xml">
+            <pivot string="Analyse des résultats">
+                <field name="filiere_id" type="row"/>
+                <field name="decision" type="col"/>
+                <field name="moyenne_ponderee" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ensiasd_resultat" model="ir.actions.act_window">
+        <field name="name">Résultats</field>
+        <field name="res_model">ensiasd.resultat</field>
+        <field name="view_mode">tree,form,pivot</field>
+        <field name="search_view_id" ref="view_ensiasd_resultat_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucun résultat enregistré
+            </p>
+            <p>
+                Les résultats sont générés automatiquement à partir des notes lors des délibérations.
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Configuration par défaut des types d'évaluation -->
+        <record id="default_config_grades" model="ir.config_parameter">
+            <field name="key">ensiasd_grades.default_cc_count</field>
+            <field name="value">2</field>
+        </record>
+
+        <record id="default_config_rattrapage" model="ir.config_parameter">
+            <field name="key">ensiasd_grades.allow_rattrapage_by_default</field>
+            <field name="value">True</field>
+        </record>
+        
+        <record id="default_config_note_max" model="ir.config_parameter">
+            <field name="key">ensiasd_grades.note_max</field>
+            <field name="value">20</field>
+        </record>
+        
+        <record id="default_config_note_validation" model="ir.config_parameter">
+            <field name="key">ensiasd_grades.note_validation</field>
+            <field name="value">12</field>
+        </record>
+        
+        <record id="default_config_note_eliminatoire" model="ir.config_parameter">
+            <field name="key">ensiasd_grades.note_eliminatoire</field>
+            <field name="value">6</field>
+        </record>
+    </data>
+</odoo>

@@ -1,54 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Vue liste des notes -->
     <record id="view_ensiasd_note_tree" model="ir.ui.view">
         <field name="name">ensiasd.note.tree</field>
         <field name="model">ensiasd.note</field>
         <field name="arch" type="xml">
-            <tree string="Notes" editable="bottom">
+            <tree string="Notes" decoration-danger="resultat == 'elimine'" 
+                  decoration-warning="resultat == 'rattrapage'"
+                  decoration-success="resultat == 'valide'">
                 <field name="student_id"/>
                 <field name="module_id"/>
-                <field name="type_eval"/>
-                <field name="valeur"/>
-                <field name="coefficient"/>
-                <field name="date_eval"/>
+                <field name="semestre"/>
+                <field name="session_id"/>
+                <field name="note_cc"/>
+                <field name="note_tp"/>
+                <field name="note_examen"/>
+                <field name="note_rattrapage"/>
+                <field name="note_finale" decoration-bf="1"/>
+                <field name="resultat" widget="badge" 
+                       decoration-success="resultat == 'valide'"
+                       decoration-danger="resultat in ['elimine', 'non_valide']"
+                       decoration-warning="resultat == 'rattrapage'"/>
+                <field name="mention"/>
                 <field name="state" widget="badge"/>
             </tree>
         </field>
     </record>
 
+    <!-- Vue formulaire des notes -->
     <record id="view_ensiasd_note_form" model="ir.ui.view">
         <field name="name">ensiasd.note.form</field>
         <field name="model">ensiasd.note</field>
         <field name="arch" type="xml">
             <form string="Note">
                 <header>
-                    <button name="action_confirm" string="Confirmer" type="object" class="btn-primary" invisible="state != 'draft'"/>
-                    <button name="action_validate" string="Valider" type="object" class="btn-success" invisible="state != 'confirmed'"/>
-                    <field name="state" widget="statusbar"/>
+                    <button name="action_confirm" string="Confirmer" type="object" 
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_validate" string="Valider" type="object" 
+                            class="btn-success" invisible="state != 'confirmed'"/>
+                    <button name="action_deliberation" string="Mettre en délibération" 
+                            type="object" invisible="state != 'validated'"
+                            groups="ensiasd_grades.group_grades_responsable"/>
+                    <button name="action_lock" string="Verrouiller" type="object" 
+                            class="btn-warning" invisible="state != 'deliberation'"
+                            groups="ensiasd_grades.group_grades_admin"/>
+                    <button name="action_reset_draft" string="Remettre en brouillon" 
+                            type="object" invisible="state in ['draft', 'locked']"
+                            groups="ensiasd_grades.group_grades_admin"/>
+                    <button name="action_recalculate" string="Recalculer" type="object" 
+                            class="btn-secondary" icon="fa-refresh"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="draft,confirmed,validated,locked"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <!-- REMOVED: Button referencing non-existent action_ensiasd_note_element -->
+                        <!-- If you need this button, first create the action_ensiasd_note_element in ensiasd_note_element_views.xml -->
+                    </div>
                     <group>
-                        <group>
+                        <group string="Identification">
                             <field name="inscription_id"/>
                             <field name="student_id" readonly="1"/>
                             <field name="module_id" readonly="1"/>
+                            <field name="filiere_id" readonly="1"/>
+                            <field name="semestre" readonly="1"/>
+                            <field name="annee_id" readonly="1"/>
+                            <field name="session_id"/>
                         </group>
-                        <group>
-                            <field name="type_eval"/>
-                            <field name="valeur"/>
-                            <field name="coefficient"/>
-                            <field name="date_eval"/>
+                        <group string="Notes par type">
+                            <field name="note_cc"/>
+                            <field name="note_tp"/>
+                            <field name="note_projet"/>
+                            <field name="note_examen"/>
+                            <field name="note_rattrapage"/>
+                            <field name="is_absent_examen"/>
                         </group>
                     </group>
-                    <field name="observations"/>
+                    <group>
+                        <group string="Résultat">
+                            <field name="bonus"/>
+                            <field name="malus"/>
+                            <field name="note_finale" readonly="1" class="oe_inline"/>
+                            <field name="resultat" readonly="1"/>
+                            <field name="mention" readonly="1"/>
+                        </group>
+                        <group string="Délibération">
+                            <field name="deliberation_id" readonly="1"/>
+                            <field name="decision_jury"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes par élément" name="elements">
+                            <field name="note_element_ids" readonly="1">
+                                <tree editable="bottom">
+                                    <field name="element_id"/>
+                                    <field name="type_eval"/>
+                                    <field name="valeur"/>
+                                    <field name="is_absent"/>
+                                    <field name="date_eval"/>
+                                    <field name="state" widget="badge"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Observations" name="observations">
+                            <field name="observations" placeholder="Observations..."/>
+                        </page>
+                    </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
 
+    <!-- Vue recherche des notes -->
+    <record id="view_ensiasd_note_search" model="ir.ui.view">
+        <field name="name">ensiasd.note.search</field>
+        <field name="model">ensiasd.note</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher des notes">
+                <field name="student_id"/>
+                <field name="module_id"/>
+                <field name="session_id"/>
+                <field name="filiere_id"/>
+                <separator/>
+                <filter name="filter_draft" string="Brouillon" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_confirmed" string="Confirmées" domain="[('state', '=', 'confirmed')]"/>
+                <filter name="filter_validated" string="Validées" domain="[('state', '=', 'validated')]"/>
+                <filter name="filter_locked" string="Verrouillées" domain="[('state', '=', 'locked')]"/>
+                <separator/>
+                <filter name="filter_valide" string="Validés" domain="[('resultat', '=', 'valide')]"/>
+                <filter name="filter_rattrapage" string="Rattrapage" domain="[('resultat', '=', 'rattrapage')]"/>
+                <filter name="filter_elimine" string="Éliminés" domain="[('resultat', '=', 'elimine')]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_student" string="Étudiant" context="{'group_by': 'student_id'}"/>
+                    <filter name="group_module" string="Module" context="{'group_by': 'module_id'}"/>
+                    <filter name="group_session" string="Session" context="{'group_by': 'session_id'}"/>
+                    <filter name="group_semestre" string="Semestre" context="{'group_by': 'semestre'}"/>
+                    <filter name="group_filiere" string="Filière" context="{'group_by': 'filiere_id'}"/>
+                    <filter name="group_resultat" string="Résultat" context="{'group_by': 'resultat'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vue pivot pour analyse -->
+    <record id="view_ensiasd_note_pivot" model="ir.ui.view">
+        <field name="name">ensiasd.note.pivot</field>
+        <field name="model">ensiasd.note</field>
+        <field name="arch" type="xml">
+            <pivot string="Analyse des notes">
+                <field name="module_id" type="row"/>
+                <field name="resultat" type="col"/>
+                <field name="note_finale" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Vue graphique -->
+    <record id="view_ensiasd_note_graph" model="ir.ui.view">
+        <field name="name">ensiasd.note.graph</field>
+        <field name="model">ensiasd.note</field>
+        <field name="arch" type="xml">
+            <graph string="Distribution des notes" type="bar">
+                <field name="mention" type="row"/>
+                <field name="student_id" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Action pour les notes -->
     <record id="action_ensiasd_note" model="ir.actions.act_window">
         <field name="name">Notes</field>
         <field name="res_model">ensiasd.note</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="search_view_id" ref="view_ensiasd_note_search"/>
+        <field name="context">{'search_default_filter_draft': 0}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune note enregistrée
+            </p>
+            <p>
+                Les notes sont créées automatiquement lors de la saisie ou peuvent être importées.
+            </p>
+        </field>
     </record>
 </odoo>

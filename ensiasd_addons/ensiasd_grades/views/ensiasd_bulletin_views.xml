@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue liste des bulletins -->
+    <record id="view_ensiasd_bulletin_tree" model="ir.ui.view">
+        <field name="name">ensiasd.bulletin.tree</field>
+        <field name="model">ensiasd.bulletin</field>
+        <field name="arch" type="xml">
+            <tree string="Bulletins">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="annee_id"/>
+                <field name="type_bulletin"/>
+                <field name="filiere_id"/>
+                <field name="moyenne_ponderee"/>
+                <field name="credits_valides"/>
+                <field name="total_credits"/>
+                <field name="decision"/>
+                <field name="mention"/>
+                <field name="rang"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire des bulletins -->
+    <record id="view_ensiasd_bulletin_form" model="ir.ui.view">
+        <field name="name">ensiasd.bulletin.form</field>
+        <field name="model">ensiasd.bulletin</field>
+        <field name="arch" type="xml">
+            <form string="Bulletin de notes">
+                <header>
+                    <button name="action_generate" string="Générer" type="object" 
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_validate" string="Valider" type="object" 
+                            class="btn-success" invisible="state != 'generated'"/>
+                    <button name="action_print" string="Imprimer" type="object" 
+                            class="btn-warning" icon="fa-print"
+                            invisible="state not in ['validated', 'printed']"/>
+                    <button name="action_reset_draft" string="Remettre en brouillon" 
+                            type="object" invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Étudiant">
+                            <field name="student_id"/>
+                            <field name="student_cne"/>
+                            <field name="student_matricule"/>
+                            <field name="student_niveau"/>
+                            <field name="student_groupe"/>
+                        </group>
+                        <group string="Académique">
+                            <field name="annee_id"/>
+                            <field name="type_bulletin"/>
+                            <field name="filiere_id"/>
+                            <field name="session_id"/>
+                            <field name="date_generation"/>
+                        </group>
+                    </group>
+                    <group string="Résultats">
+                        <group>
+                            <field name="moyenne_generale"/>
+                            <field name="moyenne_ponderee"/>
+                            <field name="mention"/>
+                        </group>
+                        <group>
+                            <field name="total_credits"/>
+                            <field name="credits_valides"/>
+                            <field name="decision"/>
+                            <field name="rang"/>
+                            <field name="effectif"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Détail des notes" name="lines">
+                            <field name="line_ids">
+                                <tree>
+                                    <field name="module_code"/>
+                                    <field name="module_name"/>
+                                    <field name="note_cc"/>
+                                    <field name="note_tp"/>
+                                    <field name="note_examen"/>
+                                    <field name="note_rattrapage"/>
+                                    <field name="note_finale" decoration-bf="1"/>
+                                    <field name="credits"/>
+                                    <field name="coefficient"/>
+                                    <field name="resultat" widget="badge"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Signature" name="signature">
+                            <group>
+                                <field name="signed_by"/>
+                                <field name="signature_date"/>
+                                <field name="observations"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue recherche -->
+    <record id="view_ensiasd_bulletin_search" model="ir.ui.view">
+        <field name="name">ensiasd.bulletin.search</field>
+        <field name="model">ensiasd.bulletin</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher des bulletins">
+                <field name="student_id"/>
+                <field name="annee_id"/>
+                <field name="filiere_id"/>
+                <separator/>
+                <filter name="filter_draft" string="Brouillon" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_generated" string="Générés" domain="[('state', '=', 'generated')]"/>
+                <filter name="filter_validated" string="Validés" domain="[('state', '=', 'validated')]"/>
+                <filter name="filter_printed" string="Imprimés" domain="[('state', '=', 'printed')]"/>
+                <separator/>
+                <filter name="filter_s1" string="S1" domain="[('type_bulletin', '=', 'S1')]"/>
+                <filter name="filter_s2" string="S2" domain="[('type_bulletin', '=', 'S2')]"/>
+                <filter name="filter_annuel" string="Annuel" domain="[('type_bulletin', '=', 'annuel')]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_annee" string="Année" context="{'group_by': 'annee_id'}"/>
+                    <filter name="group_filiere" string="Filière" context="{'group_by': 'filiere_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by': 'type_bulletin'}"/>
+                    <filter name="group_decision" string="Décision" context="{'group_by': 'decision'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ensiasd_bulletin" model="ir.actions.act_window">
+        <field name="name">Bulletins de notes</field>
+        <field name="res_model">ensiasd.bulletin</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_ensiasd_bulletin_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer un bulletin de notes
+            </p>
+            <p>
+                Les bulletins peuvent être générés individuellement ou en lot.
+            </p>
+        </field>
+    </record>
+</odoo>

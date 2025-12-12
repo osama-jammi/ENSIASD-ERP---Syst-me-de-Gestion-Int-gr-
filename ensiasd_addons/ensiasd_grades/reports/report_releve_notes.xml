@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Définition du rapport relevé de notes -->
+    <record id="action_report_releve_notes" model="ir.actions.report">
+        <field name="name">Relevé de notes</field>
+        <field name="model">ensiasd.student</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ensiasd_grades.report_releve_notes_template</field>
+        <field name="report_file">ensiasd_grades.report_releve_notes_template</field>
+        <field name="print_report_name">'Releve_%s' % object.matricule</field>
+        <field name="binding_model_id" ref="ensiasd_student.model_ensiasd_student"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Template du relevé de notes -->
+    <template id="report_releve_notes_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- En-tête -->
+                        <div class="row" style="margin-bottom: 20px;">
+                            <div class="col-12 text-center">
+                                <h2>RELEVÉ DE NOTES</h2>
+                                <p style="font-style: italic;">Document récapitulatif de l'ensemble des notes</p>
+                            </div>
+                        </div>
+
+                        <!-- Informations étudiant -->
+                        <div class="row" style="margin-bottom: 20px; border: 1px solid #ddd; padding: 15px; background-color: #f9f9f9;">
+                            <div class="col-6">
+                                <p><strong>Nom et prénom:</strong> <t t-esc="doc.name"/></p>
+                                <p><strong>CNE:</strong> <t t-esc="doc.cne"/></p>
+                                <p><strong>CIN:</strong> <t t-esc="doc.cin" t-if="doc.cin"/></p>
+                                <p><strong>Matricule:</strong> <t t-esc="doc.matricule"/></p>
+                            </div>
+                            <div class="col-6">
+                                <p><strong>Date de naissance:</strong> <t t-esc="doc.date_naissance" t-if="doc.date_naissance"/></p>
+                                <p><strong>Lieu de naissance:</strong> <t t-esc="doc.lieu_naissance" t-if="doc.lieu_naissance"/></p>
+                                <p><strong>Niveau:</strong> <t t-esc="dict(doc._fields['niveau'].selection).get(doc.niveau)"/></p>
+                                <p><strong>État:</strong> <t t-esc="dict(doc._fields['state'].selection).get(doc.state)"/></p>
+                            </div>
+                        </div>
+
+                        <!-- Notes par année/semestre -->
+                        <t t-foreach="doc.resultat_ids.sorted(key=lambda r: (r.annee_id.name, r.type_resultat))" t-as="resultat">
+                            <div style="margin-bottom: 30px;">
+                                <h4 style="background-color: #e0e0e0; padding: 8px;">
+                                    <t t-esc="resultat.annee_id.name"/> - 
+                                    <t t-esc="dict(resultat._fields['type_resultat'].selection).get(resultat.type_resultat)"/>
+                                </h4>
+                                
+                                <table class="table table-bordered table-sm" style="font-size: 10px;">
+                                    <thead style="background-color: #f0f0f0;">
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Module</th>
+                                            <th class="text-center">Note finale</th>
+                                            <th class="text-center">Crédits</th>
+                                            <th class="text-center">Résultat</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="resultat.note_ids" t-as="note">
+                                            <tr>
+                                                <td><t t-esc="note.module_id.code"/></td>
+                                                <td><t t-esc="note.module_id.name"/></td>
+                                                <td class="text-center"><t t-esc="'%.2f' % note.note_finale"/></td>
+                                                <td class="text-center"><t t-esc="note.module_id.credits_ects"/></td>
+                                                <td class="text-center">
+                                                    <span t-if="note.resultat == 'valide'" style="color: green;">Validé</span>
+                                                    <span t-if="note.resultat == 'non_valide'" style="color: red;">Non validé</span>
+                                                    <span t-if="note.resultat == 'compense'" style="color: blue;">Compensé</span>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                    <tfoot style="background-color: #f8f8f8;">
+                                        <tr style="font-weight: bold;">
+                                            <td colspan="2">Moyenne</td>
+                                            <td class="text-center"><t t-esc="'%.2f' % resultat.moyenne_ponderee"/>/20</td>
+                                            <td class="text-center"><t t-esc="resultat.credits_valides"/>/<t t-esc="resultat.total_credits"/></td>
+                                            <td class="text-center">
+                                                <t t-esc="dict(resultat._fields['decision'].selection).get(resultat.decision)"/>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </t>
+
+                        <!-- Récapitulatif global -->
+                        <div class="row" style="margin-top: 20px; border-top: 2px solid #333; padding-top: 15px;">
+                            <div class="col-6">
+                                <h5>Récapitulatif</h5>
+                                <p><strong>Moyenne générale:</strong> <t t-esc="'%.2f' % doc.moyenne_generale"/>/20</p>
+                                <p><strong>Crédits cumulés:</strong> <t t-esc="doc.credits_cumules"/></p>
+                            </div>
+                        </div>
+
+                        <!-- Signature -->
+                        <div class="row" style="margin-top: 50px;">
+                            <div class="col-4">
+                                <p>Fait à ...........................</p>
+                                <p>Le <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/></p>
+                            </div>
+                            <div class="col-4"></div>
+                            <div class="col-4 text-center">
+                                <p>Le Directeur</p>
+                                <br/><br/><br/>
+                                <p>Signature et cachet</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

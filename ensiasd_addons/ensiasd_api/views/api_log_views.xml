@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ensiasd_api_log_tree" model="ir.ui.view">
+        <field name="name">ensiasd.api.log.tree</field>
+        <field name="model">ensiasd.api.log</field>
+        <field name="arch" type="xml">
+            <tree string="Logs API" decoration-danger="status == 'error'" 
+                  decoration-warning="status == 'auth_failed'"
+                  decoration-muted="status == 'rate_limited'">
+                <field name="timestamp"/>
+                <field name="endpoint"/>
+                <field name="method"/>
+                <field name="student_id"/>
+                <field name="ip_address"/>
+                <field name="response_code"/>
+                <field name="response_time_ms"/>
+                <field name="status" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ensiasd_api_log_form" model="ir.ui.view">
+        <field name="name">ensiasd.api.log.form</field>
+        <field name="model">ensiasd.api.log</field>
+        <field name="arch" type="xml">
+            <form string="Log API" create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="timestamp"/>
+                            <field name="endpoint"/>
+                            <field name="method"/>
+                            <field name="status"/>
+                        </group>
+                        <group>
+                            <field name="student_id"/>
+                            <field name="ip_address"/>
+                            <field name="response_code"/>
+                            <field name="response_time_ms"/>
+                        </group>
+                    </group>
+                    <group string="User Agent">
+                        <field name="user_agent" nolabel="1"/>
+                    </group>
+                    <group string="Données requête" invisible="not request_data">
+                        <field name="request_data" nolabel="1"/>
+                    </group>
+                    <group string="Message erreur" invisible="not error_message">
+                        <field name="error_message" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ensiasd_api_log_search" model="ir.ui.view">
+        <field name="name">ensiasd.api.log.search</field>
+        <field name="model">ensiasd.api.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="endpoint"/>
+                <field name="student_id"/>
+                <field name="ip_address"/>
+                <filter string="Succès" name="success" domain="[('status', '=', 'success')]"/>
+                <filter string="Erreurs" name="errors" domain="[('status', '=', 'error')]"/>
+                <filter string="Auth échouée" name="auth_failed" domain="[('status', '=', 'auth_failed')]"/>
+                <filter string="Aujourd'hui" name="today" domain="[('timestamp', '>=', (context_today()).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Endpoint" name="group_endpoint" context="{'group_by': 'endpoint'}"/>
+                    <filter string="Statut" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Étudiant" name="group_student" context="{'group_by': 'student_id'}"/>
+                    <filter string="Jour" name="group_day" context="{'group_by': 'timestamp:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_ensiasd_api_token_tree" model="ir.ui.view">
+        <field name="name">ensiasd.api.token.tree</field>
+        <field name="model">ensiasd.api.token</field>
+        <field name="arch" type="xml">
+            <tree string="Tokens API" decoration-danger="not is_valid" decoration-success="is_valid">
+                <field name="student_id"/>
+                <field name="create_date"/>
+                <field name="expires_at"/>
+                <field name="last_used"/>
+                <field name="ip_address"/>
+                <field name="is_valid" widget="boolean"/>
+                <field name="revoked"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_ensiasd_api_log" model="ir.actions.act_window">
+        <field name="name">Logs API</field>
+        <field name="res_model">ensiasd.api.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_today': 1}</field>
+    </record>
+
+    <record id="action_ensiasd_api_token" model="ir.actions.act_window">
+        <field name="name">Tokens API</field>
+        <field name="res_model">ensiasd.api.token</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

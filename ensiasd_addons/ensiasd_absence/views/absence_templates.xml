@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Template formulaire d'appel web -->
+    <template id="appel_form" name="Formulaire d'appel">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <style>
+                    .appel-container { max-width: 800px; margin: 20px auto; padding: 20px; }
+                    .appel-header { background: #875a7b; color: white; padding: 20px; border-radius: 5px 5px 0 0; }
+                    .appel-body { background: #f9f9f9; padding: 20px; border: 1px solid #ddd; }
+                    .student-row { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
+                    .student-row:nth-child(even) { background: #f5f5f5; }
+                    .student-name { flex: 1; }
+                    .student-status { display: flex; gap: 10px; }
+                    .btn-present { background: #28a745; color: white; padding: 5px 15px; border: none; border-radius: 3px; cursor: pointer; }
+                    .btn-absent { background: #dc3545; color: white; padding: 5px 15px; border: none; border-radius: 3px; cursor: pointer; }
+                    .btn-present.active, .btn-absent.active { box-shadow: 0 0 0 3px rgba(0,0,0,0.2); }
+                    .submit-btn { background: #875a7b; color: white; padding: 15px 30px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; margin-top: 20px; }
+                </style>
+            </t>
+            <div class="appel-container">
+                <div class="appel-header">
+                    <h2>📋 Formulaire d'appel</h2>
+                    <p><strong><t t-esc="seance.element_id.module_id.name"/></strong></p>
+                    <p>Date: <t t-esc="seance.date"/> | Salle: <t t-esc="seance.salle_id.name"/></p>
+                </div>
+                <div class="appel-body">
+                    <form method="post" action="/absence/appel/submit">
+                        <input type="hidden" name="token" t-att-value="token"/>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        
+                        <p><strong><t t-esc="len(students)"/></strong> étudiants</p>
+                        
+                        <div class="students-list">
+                            <t t-foreach="students" t-as="student">
+                                <div class="student-row">
+                                    <div class="student-name">
+                                        <strong><t t-esc="student.name"/></strong>
+                                        <br/><small style="color: #666;"><t t-esc="student.cne"/></small>
+                                    </div>
+                                    <div class="student-status">
+                                        <label>
+                                            <input type="radio" t-att-name="'student_%s' % student.id" value="present"
+                                                   t-att-checked="student.id not in absent_ids"/>
+                                            ✓ Présent
+                                        </label>
+                                        <label>
+                                            <input type="radio" t-att-name="'student_%s' % student.id" value="absent"
+                                                   t-att-checked="student.id in absent_ids"/>
+                                            ✗ Absent
+                                        </label>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <button type="submit" class="submit-btn">Enregistrer l'appel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Template succès appel -->
+    <template id="appel_success" name="Appel enregistré">
+        <t t-call="web.layout">
+            <div style="max-width: 600px; margin: 50px auto; text-align: center; padding: 40px; background: #f9f9f9; border-radius: 10px;">
+                <div style="font-size: 60px; color: #28a745;">✓</div>
+                <h2>Appel enregistré avec succès!</h2>
+                <p><strong><t t-esc="absent_count"/></strong> absence(s) sur <strong><t t-esc="total"/></strong> étudiants</p>
+                <p style="color: #666;">
+                    Séance: <t t-esc="seance.name"/><br/>
+                    Date: <t t-esc="seance.date"/>
+                </p>
+                <p style="margin-top: 20px;">
+                    <a href="/" style="color: #875a7b;">Retour à l'accueil</a>
+                </p>
+            </div>
+        </t>
+    </template>
+
+    <!-- Template erreur -->
+    <template id="appel_error" name="Erreur">
+        <t t-call="web.layout">
+            <div style="max-width: 600px; margin: 50px auto; text-align: center; padding: 40px; background: #f9f9f9; border-radius: 10px;">
+                <div style="font-size: 60px; color: #dc3545;">⚠</div>
+                <h2>Erreur</h2>
+                <p><t t-esc="error"/></p>
+                <p style="margin-top: 20px;">
+                    <a href="/" style="color: #875a7b;">Retour à l'accueil</a>
+                </p>
+            </div>
+        </t>
+    </template>
+
+    <!-- Template formulaire justification -->
+    <template id="justification_form" name="Justification d'absence">
+        <t t-call="web.layout">
+            <div style="max-width: 600px; margin: 20px auto; padding: 20px;">
+                <div style="background: #875a7b; color: white; padding: 20px; border-radius: 5px 5px 0 0;">
+                    <h2>📝 Justifier une absence</h2>
+                </div>
+                <div style="background: #f9f9f9; padding: 20px; border: 1px solid #ddd;">
+                    <p><strong>Étudiant:</strong> <t t-esc="absence.student_id.name"/></p>
+                    <p><strong>Date:</strong> <t t-esc="absence.date"/></p>
+                    <p><strong>Module:</strong> <t t-esc="absence.module_id.name"/></p>
+                    
+                    <form method="post" action="/absence/justification/submit" enctype="multipart/form-data">
+                        <input type="hidden" name="absence_id" t-att-value="absence.id"/>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        
+                        <div style="margin: 20px 0;">
+                            <label><strong>Motif de l'absence:</strong></label><br/>
+                            <textarea name="motif" rows="4" style="width: 100%; padding: 10px;" required="required"
+                                      placeholder="Décrivez le motif de votre absence..."></textarea>
+                        </div>
+                        
+                        <div style="margin: 20px 0;">
+                            <label><strong>Pièce justificative (optionnel):</strong></label><br/>
+                            <input type="file" name="justificatif" accept=".pdf,.jpg,.jpeg,.png"/>
+                            <p style="color: #666; font-size: 12px;">Formats acceptés: PDF, JPG, PNG</p>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <button type="submit" style="background: #875a7b; color: white; padding: 15px 30px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+                                Soumettre la justification
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Template succès justification -->
+    <template id="justification_success" name="Justification soumise">
+        <t t-call="web.layout">
+            <div style="max-width: 600px; margin: 50px auto; text-align: center; padding: 40px; background: #f9f9f9; border-radius: 10px;">
+                <div style="font-size: 60px; color: #28a745;">✓</div>
+                <h2>Justification soumise!</h2>
+                <p>Votre demande de justification a été enregistrée.</p>
+                <p style="color: #666;">Elle sera examinée par l'administration dans les plus brefs délais.</p>
+                <p style="margin-top: 20px;">
+                    <a href="/" style="color: #875a7b;">Retour à l'accueil</a>
+                </p>
+            </div>
+        </t>
+    </template>
+</odoo>

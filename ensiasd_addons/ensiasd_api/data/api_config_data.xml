@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Configuration API par défaut -->
+        <record id="default_api_config" model="ensiasd.api.config">
+            <field name="name">Configuration API ENSIASD</field>
+            <field name="token_expiry_hours">24</field>
+            <field name="max_requests_per_minute">60</field>
+            <field name="enable_notes">True</field>
+            <field name="enable_absences">True</field>
+            <field name="enable_emploi_temps">True</field>
+            <field name="enable_stages">True</field>
+            <field name="enable_logging">True</field>
+            <field name="log_retention_days">30</field>
+        </record>
+    </data>
+</odoo>

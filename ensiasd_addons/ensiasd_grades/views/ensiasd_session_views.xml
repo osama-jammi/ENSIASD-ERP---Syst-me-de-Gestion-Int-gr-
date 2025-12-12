@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue liste des sessions -->
+    <record id="view_ensiasd_session_tree" model="ir.ui.view">
+        <field name="name">ensiasd.session.tree</field>
+        <field name="model">ensiasd.session</field>
+        <field name="arch" type="xml">
+            <tree string="Sessions" 
+                  decoration-info="state == 'saisie'"
+                  decoration-success="state == 'done'"
+                  decoration-warning="state == 'deliberation'">
+                <field name="name"/>
+                <field name="annee_id"/>
+                <field name="type_session"/>
+                <field name="semestre"/>
+                <field name="date_debut"/>
+                <field name="date_fin"/>
+                <field name="date_limite_saisie"/>
+                <field name="note_count"/>
+                <field name="is_current" widget="boolean_toggle"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire des sessions -->
+    <record id="view_ensiasd_session_form" model="ir.ui.view">
+        <field name="name">ensiasd.session.form</field>
+        <field name="model">ensiasd.session</field>
+        <field name="arch" type="xml">
+            <form string="Session d'examens">
+                <header>
+                    <button name="action_open" string="Ouvrir" type="object" 
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_start_saisie" string="Démarrer saisie" type="object" 
+                            class="btn-primary" invisible="state != 'open'"/>
+                    <button name="action_close" string="Clôturer" type="object" 
+                            class="btn-warning" invisible="state != 'saisie'"/>
+                    <button name="action_deliberation" string="Délibération" type="object" 
+                            class="btn-primary" invisible="state != 'closed'"/>
+                    <button name="action_done" string="Terminer" type="object" 
+                            class="btn-success" invisible="state != 'deliberation'"/>
+                    <button name="action_reset_draft" string="Remettre en brouillon" 
+                            type="object" invisible="state in ['draft', 'done']"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="draft,open,saisie,closed,deliberation,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_notes" type="object"
+                                class="oe_stat_button" icon="fa-list-alt">
+                            <field name="note_count" string="Notes" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Session en cours" 
+                            bg_color="bg-success" invisible="not is_current"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Informations générales">
+                            <field name="code"/>
+                            <field name="annee_id"/>
+                            <field name="type_session"/>
+                            <field name="semestre"/>
+                            <field name="is_current"/>
+                        </group>
+                        <group string="Dates">
+                            <field name="date_debut"/>
+                            <field name="date_fin"/>
+                            <field name="date_limite_saisie"/>
+                        </group>
+                    </group>
+                    <group string="Configuration">
+                        <group>
+                            <field name="allow_rattrapage"/>
+                        </group>
+                        <group>
+                            <field name="filiere_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <field name="observations" placeholder="Observations..."/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue recherche -->
+    <record id="view_ensiasd_session_search" model="ir.ui.view">
+        <field name="name">ensiasd.session.search</field>
+        <field name="model">ensiasd.session</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher des sessions">
+                <field name="name"/>
+                <field name="annee_id"/>
+                <separator/>
+                <filter name="filter_current" string="Session en cours" domain="[('is_current', '=', True)]"/>
+                <filter name="filter_normale" string="Session normale" domain="[('type_session', '=', 'normale')]"/>
+                <filter name="filter_rattrapage" string="Rattrapage" domain="[('type_session', '=', 'rattrapage')]"/>
+                <separator/>
+                <filter name="filter_saisie" string="Saisie en cours" domain="[('state', '=', 'saisie')]"/>
+                <filter name="filter_done" string="Terminées" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_annee" string="Année" context="{'group_by': 'annee_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by': 'type_session'}"/>
+                    <filter name="group_semestre" string="Semestre" context="{'group_by': 'semestre'}"/>
+                    <filter name="group_state" string="État" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vue calendrier -->
+    <record id="view_ensiasd_session_calendar" model="ir.ui.view">
+        <field name="name">ensiasd.session.calendar</field>
+        <field name="model">ensiasd.session</field>
+        <field name="arch" type="xml">
+            <calendar string="Sessions" date_start="date_debut" date_stop="date_fin" 
+                      color="type_session" mode="month">
+                <field name="name"/>
+                <field name="semestre"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ensiasd_session" model="ir.actions.act_window">
+        <field name="name">Sessions d'examens</field>
+        <field name="res_model">ensiasd.session</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="search_view_id" ref="view_ensiasd_session_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer une nouvelle session
+            </p>
+            <p>
+                Les sessions définissent les périodes d'examens et de saisie des notes.
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue wizard appel -->
+    <record id="view_appel_wizard_form" model="ir.ui.view">
+        <field name="name">ensiasd.appel.wizard.form</field>
+        <field name="model">ensiasd.appel.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Appel">
+                <div class="alert alert-info" role="alert">
+                    <h4><field name="module_name" readonly="1" class="oe_inline"/> - <field name="date" readonly="1" class="oe_inline"/></h4>
+                    <p>
+                        <strong><field name="total_etudiants" readonly="1" class="oe_inline"/></strong> étudiants |
+                        <span style="color: green;"><strong><field name="presents" readonly="1" class="oe_inline"/></strong> présents</span> |
+                        <span style="color: red;"><strong><field name="absents" readonly="1" class="oe_inline"/></strong> absents</span>
+                    </p>
+                </div>
+                <group>
+                    <field name="seance_id" invisible="1"/>
+                    <field name="line_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="student_cne"/>
+                            <field name="student_name"/>
+                            <field name="is_absent" widget="boolean_toggle"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button name="action_mark_all_present" string="Tous présents" type="object"
+                            class="btn-secondary"/>
+                    <button name="action_mark_all_absent" string="Tous absents" type="object"
+                            class="btn-secondary"/>
+                    <button name="action_save_appel" string="Enregistrer l'appel" type="object"
+                            class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue wizard envoyer formulaire -->
+    <record id="view_send_appel_wizard_form" model="ir.ui.view">
+        <field name="name">ensiasd.send.appel.wizard.form</field>
+        <field name="model">ensiasd.send.appel.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Envoyer formulaire d'appel">
+                <group>
+                    <field name="seance_ids" widget="many2many_tags"/>
+                    <field name="send_to" widget="radio"/>
+                    <field name="custom_email" invisible="send_to != 'custom'"
+                           required="send_to == 'custom'"/>
+                    <field name="include_student_list"/>
+                    <field name="validity_hours"/>
+                </group>
+                <footer>
+                    <button name="action_send" string="Envoyer" type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action wizard envoyer -->
+    <record id="action_send_appel_wizard" model="ir.actions.act_window">
+        <field name="name">Envoyer formulaire d'appel</field>
+        <field name="res_model">ensiasd.send.appel.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

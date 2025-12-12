@@ -1,13 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_ensiasd_notes"
+    <!-- Menu principal Notes - accessible à tous les utilisateurs -->
+    <menuitem id="menu_ensiasd_grades_root"
               name="Notes"
-              parent="ensiasd_academic.menu_ensiasd_academic_root"
+              sequence="40"
+              web_icon="ensiasd_grades,static/description/icon.svg"/>
+
+    <!-- Sous-menu Tableau de bord -->
+    <menuitem id="menu_grades_dashboard"
+              name="Tableau de bord"
+              parent="menu_ensiasd_grades_root"
+              action="action_grades_dashboard"
+              sequence="1"/>
+
+    <!-- Sous-menu Saisie des notes -->
+    <menuitem id="menu_grades_saisie"
+              name="Saisie des notes"
+              parent="menu_ensiasd_grades_root"
               sequence="10"/>
 
-    <menuitem id="menu_ensiasd_note_saisie"
-              name="Saisie des notes"
-              parent="menu_ensiasd_notes"
+    <menuitem id="menu_ensiasd_note"
+              name="Notes par module"
+              parent="menu_grades_saisie"
               action="action_ensiasd_note"
+              sequence="1"/>
+
+    <menuitem id="menu_ensiasd_note_element"
+              name="Notes par élément"
+              parent="menu_grades_saisie"
+              action="action_ensiasd_note_element"
+              sequence="2"/>
+
+    <!-- Sous-menu Résultats -->
+    <menuitem id="menu_grades_resultats"
+              name="Résultats"
+              parent="menu_ensiasd_grades_root"
+              sequence="20"/>
+
+    <menuitem id="menu_ensiasd_resultat"
+              name="Résultats semestriels"
+              parent="menu_grades_resultats"
+              action="action_ensiasd_resultat"
+              sequence="1"/>
+
+    <menuitem id="menu_ensiasd_bulletin"
+              name="Bulletins de notes"
+              parent="menu_grades_resultats"
+              action="action_ensiasd_bulletin"
+              sequence="2"/>
+
+    <!-- Sous-menu Délibérations -->
+    <menuitem id="menu_grades_deliberations"
+              name="Délibérations"
+              parent="menu_ensiasd_grades_root"
+              sequence="30"
+              groups="ensiasd_grades.group_grades_responsable"/>
+
+    <menuitem id="menu_ensiasd_deliberation"
+              name="Conseils de classe"
+              parent="menu_grades_deliberations"
+              action="action_ensiasd_deliberation"
+              sequence="1"/>
+
+    <!-- Sous-menu Configuration -->
+    <menuitem id="menu_grades_config"
+              name="Configuration"
+              parent="menu_ensiasd_grades_root"
+              sequence="90"
+              groups="ensiasd_grades.group_grades_responsable"/>
+
+    <menuitem id="menu_ensiasd_session"
+              name="Sessions d'examens"
+              parent="menu_grades_config"
+              action="action_ensiasd_session"
+              sequence="1"/>
+
+    <menuitem id="menu_ensiasd_bareme"
+              name="Barèmes de notation"
+              parent="menu_grades_config"
+              action="action_ensiasd_bareme"
+              sequence="2"/>
+
+    <!-- Sous-menu Rapports -->
+    <menuitem id="menu_grades_reports"
+              name="Rapports"
+              parent="menu_ensiasd_grades_root"
+              sequence="80"/>
+
+    <menuitem id="menu_grades_stats"
+              name="Statistiques"
+              parent="menu_grades_reports"
+              action="action_grades_stats"
               sequence="1"/>
 </odoo>

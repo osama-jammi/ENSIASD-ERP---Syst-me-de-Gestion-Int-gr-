@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extension de la vue liste des séances -->
+    <record id="view_ensiasd_seance_tree_extend" model="ir.ui.view">
+        <field name="name">ensiasd.seance.tree.extend</field>
+        <field name="model">ensiasd.seance</field>
+        <field name="inherit_id" ref="ensiasd_academic.view_ensiasd_seance_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="absence_count"/>
+                <field name="taux_presence" widget="progressbar"/>
+                <field name="appel_fait"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Extension de la vue formulaire des séances -->
+    <record id="view_ensiasd_seance_form_extend" model="ir.ui.view">
+        <field name="name">ensiasd.seance.form.extend</field>
+        <field name="model">ensiasd.seance</field>
+        <field name="inherit_id" ref="ensiasd_academic.view_ensiasd_seance_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_open_appel" string="Faire l'appel" type="object"
+                        class="btn-primary" icon="fa-check-square-o"/>
+                <button name="action_send_appel_email" string="Envoyer formulaire" type="object"
+                        class="btn-secondary" icon="fa-envelope"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group string="Emploi du temps" invisible="not emploi_id">
+                    <field name="emploi_id" readonly="1"/>
+                    <field name="is_generated" readonly="1"/>
+                </group>
+                <group string="Présences">
+                    <field name="total_etudiants" readonly="1"/>
+                    <field name="presence_count" readonly="1"/>
+                    <field name="absence_count" readonly="1"/>
+                    <field name="taux_presence" widget="progressbar" readonly="1"/>
+                    <field name="appel_fait"/>
+                    <field name="date_appel" invisible="not appel_fait"/>
+                </group>
+            </xpath>
+            <xpath expr="//sheet" position="after">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_absences" type="object" class="oe_stat_button" icon="fa-user-times">
+                        <field name="absence_count" widget="statinfo" string="Absences"/>
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Vue calendrier des séances -->
+    <record id="view_ensiasd_seance_calendar" model="ir.ui.view">
+        <field name="name">ensiasd.seance.calendar</field>
+        <field name="model">ensiasd.seance</field>
+        <field name="arch" type="xml">
+            <calendar string="Séances" date_start="date" color="element_id" mode="week"
+                      event_open_popup="true">
+                <field name="name"/>
+                <field name="element_id"/>
+                <field name="salle_id"/>
+                <field name="enseignant_id"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Action séances avec vue calendrier -->
+    <record id="action_ensiasd_seance_calendar" model="ir.actions.act_window">
+        <field name="name">Planning des séances</field>
+        <field name="res_model">ensiasd.seance</field>
+        <field name="view_mode">calendar,tree,form</field>
+        <field name="context">{'search_default_filter_planned': 1}</field>
+    </record>
+</odoo>

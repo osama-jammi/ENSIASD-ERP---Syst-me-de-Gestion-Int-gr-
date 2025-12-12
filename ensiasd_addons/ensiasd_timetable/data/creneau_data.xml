@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Créneaux du matin -->
+        <record id="creneau_1" model="ensiasd.creneau">
+            <field name="jour">0</field>
+            <field name="heure_debut">8.5</field>
+            <field name="heure_fin">10.0</field>
+            <field name="type_creneau">all</field>
+        </record>
+        <record id="creneau_2" model="ensiasd.creneau">
+            <field name="jour">0</field>
+            <field name="heure_debut">10.25</field>
+            <field name="heure_fin">11.75</field>
+            <field name="type_creneau">all</field>
+        </record>
+        
+        <!-- Créneaux de l'après-midi -->
+        <record id="creneau_3" model="ensiasd.creneau">
+            <field name="jour">0</field>
+            <field name="heure_debut">14.0</field>
+            <field name="heure_fin">15.5</field>
+            <field name="type_creneau">all</field>
+        </record>
+        <record id="creneau_4" model="ensiasd.creneau">
+            <field name="jour">0</field>
+            <field name="heure_debut">15.75</field>
+            <field name="heure_fin">17.25</field>
+            <field name="type_creneau">all</field>
+        </record>
+        
+        <!-- Mardi -->
+        <record id="creneau_5" model="ensiasd.creneau">
+            <field name="jour">1</field>
+            <field name="heure_debut">8.5</field>
+            <field name="heure_fin">10.0</field>
+        </record>
+        <record id="creneau_6" model="ensiasd.creneau">
+            <field name="jour">1</field>
+            <field name="heure_debut">10.25</field>
+            <field name="heure_fin">11.75</field>
+        </record>
+        <record id="creneau_7" model="ensiasd.creneau">
+            <field name="jour">1</field>
+            <field name="heure_debut">14.0</field>
+            <field name="heure_fin">15.5</field>
+        </record>
+        <record id="creneau_8" model="ensiasd.creneau">
+            <field name="jour">1</field>
+            <field name="heure_debut">15.75</field>
+            <field name="heure_fin">17.25</field>
+        </record>
+        
+        <!-- Mercredi -->
+        <record id="creneau_9" model="ensiasd.creneau">
+            <field name="jour">2</field>
+            <field name="heure_debut">8.5</field>
+            <field name="heure_fin">10.0</field>
+        </record>
+        <record id="creneau_10" model="ensiasd.creneau">
+            <field name="jour">2</field>
+            <field name="heure_debut">10.25</field>
+            <field name="heure_fin">11.75</field>
+        </record>
+        <record id="creneau_11" model="ensiasd.creneau">
+            <field name="jour">2</field>
+            <field name="heure_debut">14.0</field>
+            <field name="heure_fin">15.5</field>
+        </record>
+        <record id="creneau_12" model="ensiasd.creneau">
+            <field name="jour">2</field>
+            <field name="heure_debut">15.75</field>
+            <field name="heure_fin">17.25</field>
+        </record>
+        
+        <!-- Jeudi -->
+        <record id="creneau_13" model="ensiasd.creneau">
+            <field name="jour">3</field>
+            <field name="heure_debut">8.5</field>
+            <field name="heure_fin">10.0</field>
+        </record>
+        <record id="creneau_14" model="ensiasd.creneau">
+            <field name="jour">3</field>
+            <field name="heure_debut">10.25</field>
+            <field name="heure_fin">11.75</field>
+        </record>
+        <record id="creneau_15" model="ensiasd.creneau">
+            <field name="jour">3</field>
+            <field name="heure_debut">14.0</field>
+            <field name="heure_fin">15.5</field>
+        </record>
+        <record id="creneau_16" model="ensiasd.creneau">
+            <field name="jour">3</field>
+            <field name="heure_debut">15.75</field>
+            <field name="heure_fin">17.25</field>
+        </record>
+        
+        <!-- Vendredi -->
+        <record id="creneau_17" model="ensiasd.creneau">
+            <field name="jour">4</field>
+            <field name="heure_debut">8.5</field>
+            <field name="heure_fin">10.0</field>
+        </record>
+        <record id="creneau_18" model="ensiasd.creneau">
+            <field name="jour">4</field>
+            <field name="heure_debut">10.25</field>
+            <field name="heure_fin">11.75</field>
+        </record>
+        <record id="creneau_19" model="ensiasd.creneau">
+            <field name="jour">4</field>
+            <field name="heure_debut">14.0</field>
+            <field name="heure_fin">15.5</field>
+        </record>
+        <record id="creneau_20" model="ensiasd.creneau">
+            <field name="jour">4</field>
+            <field name="heure_debut">15.75</field>
+            <field name="heure_fin">17.25</field>
+        </record>
+    </data>
+</odoo>

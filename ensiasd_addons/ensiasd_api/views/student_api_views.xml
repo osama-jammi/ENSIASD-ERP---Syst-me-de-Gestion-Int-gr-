@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extension de la vue formulaire étudiant pour ajouter le bouton mot de passe API -->
+    <record id="view_ensiasd_student_form_api" model="ir.ui.view">
+        <field name="name">ensiasd.student.form.api</field>
+        <field name="model">ensiasd.student</field>
+        <field name="inherit_id" ref="ensiasd_student.view_ensiasd_student_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_set_api_password" 
+                        string="Définir mot de passe API" 
+                        type="object" 
+                        class="btn-secondary"
+                        groups="ensiasd_core.group_ensiasd_admin,ensiasd_core.group_ensiasd_scolarite"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="api_enabled"/>
+                <field name="last_api_login" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Wizard pour définir le mot de passe -->
+    <record id="view_set_api_password_wizard" model="ir.ui.view">
+        <field name="name">set.api.password.wizard.form</field>
+        <field name="model">set.api.password.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Définir le mot de passe API">
+                <group>
+                    <field name="student_id" readonly="1"/>
+                    <field name="password" password="True"/>
+                    <field name="confirm_password" password="True"/>
+                </group>
+                <footer>
+                    <button name="action_set_password" string="Définir" type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_set_api_password_wizard" model="ir.actions.act_window">
+        <field name="name">Définir mot de passe API</field>
+        <field name="res_model">set.api.password.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue Kanban pour le dashboard -->
+    <record id="view_grades_dashboard_kanban" model="ir.ui.view">
+        <field name="name">grades.dashboard.kanban</field>
+        <field name="model">ensiasd.session</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard" create="false">
+                <field name="name"/>
+                <field name="note_count"/>
+                <field name="state"/>
+                <field name="type_session"/>
+                <field name="is_current"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title mb16">
+                                    <div class="o_primary">
+                                        <field name="name"/>
+                                    </div>
+                                    <div class="o_secondary">
+                                        <field name="state" widget="badge"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content">
+                                <div class="row">
+                                    <div class="col-6 o_kanban_primary_left">
+                                        <button class="btn btn-primary" name="action_view_notes" type="object">
+                                            <span><field name="note_count"/> notes</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Action dashboard -->
+    <record id="action_grades_dashboard" model="ir.actions.act_window">
+        <field name="name">Tableau de bord Notes</field>
+        <field name="res_model">ensiasd.session</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('state', 'in', ['open', 'saisie', 'deliberation'])]</field>
+        <field name="context">{'search_default_filter_current': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Bienvenue dans le module de gestion des notes
+            </p>
+            <p>
+                Utilisez le menu pour accéder aux différentes fonctionnalités :
+                <ul>
+                    <li>Sessions : Gérer les périodes d'examens</li>
+                    <li>Notes : Saisir et consulter les notes</li>
+                    <li>Résultats : Voir les résultats par semestre</li>
+                    <li>Délibérations : Valider les résultats</li>
+                    <li>Bulletins : Générer les bulletins de notes</li>
+                </ul>
+            </p>
+        </field>
+    </record>
+
+    <!-- Vue pour statistiques rapides -->
+    <record id="view_grades_stats" model="ir.ui.view">
+        <field name="name">grades.stats</field>
+        <field name="model">ensiasd.resultat</field>
+        <field name="arch" type="xml">
+            <graph string="Statistiques des résultats" type="pie">
+                <field name="decision" type="row"/>
+                <field name="student_id" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Action statistiques -->
+    <record id="action_grades_stats" model="ir.actions.act_window">
+        <field name="name">Statistiques</field>
+        <field name="res_model">ensiasd.resultat</field>
+        <field name="view_mode">graph,pivot,tree</field>
+    </record>
+</odoo>

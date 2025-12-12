@@ -1,4 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_ensiasd_absence_admin,ensiasd.absence.admin,model_ensiasd_absence,ensiasd_core.group_ensiasd_admin,1,1,1,1
-access_ensiasd_absence_teacher,ensiasd.absence.teacher,model_ensiasd_absence,ensiasd_core.group_ensiasd_teacher,1,1,1,0
-access_ensiasd_absence_student,ensiasd.absence.student,model_ensiasd_absence,ensiasd_core.group_ensiasd_student,1,0,0,0
+access_ensiasd_absence_public,ensiasd.absence.public,model_ensiasd_absence,base.group_user,1,0,0,0
+access_ensiasd_absence_user,ensiasd.absence.user,model_ensiasd_absence,base.group_user,1,1,1,0
+access_ensiasd_absence_manager,ensiasd.absence.manager,model_ensiasd_absence,base.group_system,1,1,1,1
+access_ensiasd_absence_token_user,ensiasd.absence.token.user,model_ensiasd_absence_token,base.group_user,1,1,1,0
+access_ensiasd_absence_token_manager,ensiasd.absence.token.manager,model_ensiasd_absence_token,base.group_system,1,1,1,1
+access_appel_wizard,ensiasd.appel.wizard,model_ensiasd_appel_wizard,base.group_user,1,1,1,1
+access_appel_wizard_line,ensiasd.appel.wizard.line,model_ensiasd_appel_wizard_line,base.group_user,1,1,1,1
+access_send_appel_wizard,ensiasd.send.appel.wizard,model_ensiasd_send_appel_wizard,base.group_user,1,1,1,1

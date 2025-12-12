@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue formulaire du wizard de délibération -->
+    <record id="view_deliberation_wizard_form" model="ir.ui.view">
+        <field name="name">ensiasd.deliberation.wizard.form</field>
+        <field name="model">ensiasd.deliberation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Créer une délibération">
+                <group>
+                    <group string="Informations générales">
+                        <field name="annee_id"/>
+                        <field name="session_id"/>
+                        <field name="filiere_id"/>
+                        <field name="type_deliberation"/>
+                    </group>
+                    <group string="Date et lieu">
+                        <field name="date"/>
+                        <field name="lieu"/>
+                    </group>
+                </group>
+                <group string="Jury">
+                    <field name="president_id"/>
+                    <field name="membre_ids" widget="many2many_tags"/>
+                </group>
+                <group string="Aperçu" col="2">
+                    <field name="nb_etudiants"/>
+                    <field name="nb_notes_manquantes" 
+                           decoration-danger="nb_notes_manquantes > 0"/>
+                </group>
+                <footer>
+                    <button name="action_create_deliberation" string="Créer la délibération" 
+                            type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action pour ouvrir le wizard -->
+    <record id="action_deliberation_wizard" model="ir.actions.act_window">
+        <field name="name">Nouvelle délibération</field>
+        <field name="res_model">ensiasd.deliberation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Vue formulaire du wizard de bulletin -->
+    <record id="view_bulletin_wizard_form" model="ir.ui.view">
+        <field name="name">ensiasd.bulletin.wizard.form</field>
+        <field name="model">ensiasd.bulletin.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Générer des bulletins">
+                <group>
+                    <group string="Mode">
+                        <field name="mode" widget="radio"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Sélection">
+                        <field name="student_id" invisible="mode != 'single'"/>
+                        <field name="annee_id"/>
+                        <field name="filiere_id" required="mode == 'batch'"/>
+                        <field name="type_bulletin"/>
+                        <field name="session_id"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_generate" string="Générer" 
+                            type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action pour ouvrir le wizard de bulletin -->
+    <record id="action_bulletin_wizard" model="ir.actions.act_window">
+        <field name="name">Générer des bulletins</field>
+        <field name="res_model">ensiasd.bulletin.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem id="menu_deliberation_wizard"
+              name="Nouvelle délibération"
+              parent="menu_grades_deliberations"
+              action="action_deliberation_wizard"
+              sequence="2"/>
+
+    <menuitem id="menu_bulletin_wizard"
+              name="Générer des bulletins"
+              parent="menu_grades_resultats"
+              action="action_bulletin_wizard"
+              sequence="3"/>
+</odoo>

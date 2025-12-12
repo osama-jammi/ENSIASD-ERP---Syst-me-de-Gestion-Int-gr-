@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue liste des lignes -->
+    <record id="view_ensiasd_emploi_ligne_tree" model="ir.ui.view">
+        <field name="name">ensiasd.emploi.ligne.tree</field>
+        <field name="model">ensiasd.emploi.ligne</field>
+        <field name="arch" type="xml">
+            <tree string="Lignes emploi du temps" editable="bottom">
+                <field name="emploi_id" column_invisible="True"/>
+                <field name="jour"/>
+                <field name="creneau_id"/>
+                <field name="element_id"/>
+                <field name="module_id" readonly="1"/>
+                <field name="type_element" readonly="1"/>
+                <field name="salle_id"/>
+                <field name="enseignant_id"/>
+                <field name="frequence"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire -->
+    <record id="view_ensiasd_emploi_ligne_form" model="ir.ui.view">
+        <field name="name">ensiasd.emploi.ligne.form</field>
+        <field name="model">ensiasd.emploi.ligne</field>
+        <field name="arch" type="xml">
+            <form string="Ligne emploi du temps">
+                <sheet>
+                    <group>
+                        <group string="Créneau">
+                            <field name="emploi_id"/>
+                            <field name="jour"/>
+                            <field name="creneau_id" domain="[('jour', '=', jour)]"/>
+                            <field name="frequence"/>
+                        </group>
+                        <group string="Cours">
+                            <field name="element_id"/>
+                            <field name="module_id" readonly="1"/>
+                            <field name="type_element" readonly="1"/>
+                            <field name="salle_id"/>
+                            <field name="enseignant_id"/>
+                        </group>
+                    </group>
+                    <group string="Groupes">
+                        <field name="groupe_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ensiasd_emploi_ligne" model="ir.actions.act_window">
+        <field name="name">Lignes d'emploi du temps</field>
+        <field name="res_model">ensiasd.emploi.ligne</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

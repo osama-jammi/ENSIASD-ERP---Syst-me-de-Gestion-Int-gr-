@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue liste des emplois du temps -->
+    <record id="view_ensiasd_emploi_tree" model="ir.ui.view">
+        <field name="name">ensiasd.emploi.tree</field>
+        <field name="model">ensiasd.emploi</field>
+        <field name="arch" type="xml">
+            <tree string="Emplois du temps" decoration-info="state == 'draft'" 
+                  decoration-success="state == 'active'">
+                <field name="name"/>
+                <field name="filiere_id"/>
+                <field name="semestre"/>
+                <field name="annee_id"/>
+                <field name="date_debut"/>
+                <field name="date_fin"/>
+                <field name="seance_count"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'"
+                       decoration-success="state == 'active'" decoration-warning="state == 'confirmed'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire -->
+    <record id="view_ensiasd_emploi_form" model="ir.ui.view">
+        <field name="name">ensiasd.emploi.form</field>
+        <field name="model">ensiasd.emploi</field>
+        <field name="arch" type="xml">
+            <form string="Emploi du temps">
+                <header>
+                    <button name="action_confirm" string="Confirmer" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_activate" string="Activer" type="object"
+                            class="btn-success" invisible="state != 'confirmed'"/>
+                    <button name="action_generate_seances" string="Générer les séances" type="object"
+                            class="btn-warning" invisible="state not in ['confirmed', 'active']"/>
+                    <button name="action_archive" string="Archiver" type="object"
+                            invisible="state != 'active'"/>
+                    <button name="action_draft" string="Remettre en brouillon" type="object"
+                            invisible="state in ['draft', 'archived']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,active"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_seances" type="object" class="oe_stat_button" icon="fa-calendar">
+                            <field name="seance_count" widget="statinfo" string="Séances"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group string="Identification">
+                            <field name="filiere_id"/>
+                            <field name="semestre"/>
+                            <field name="annee_id"/>
+                        </group>
+                        <group string="Période">
+                            <field name="date_debut"/>
+                            <field name="date_fin"/>
+                            <field name="groupe_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Emploi du temps" name="lignes">
+                            <field name="ligne_ids">
+                                <tree editable="bottom">
+                                    <field name="jour"/>
+                                    <field name="creneau_id" domain="[('jour', '=', jour)]"/>
+                                    <field name="element_id"/>
+                                    <field name="type_element" readonly="1"/>
+                                    <field name="salle_id"/>
+                                    <field name="enseignant_id"/>
+                                    <field name="frequence"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes" placeholder="Notes et observations..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue recherche -->
+    <record id="view_ensiasd_emploi_search" model="ir.ui.view">
+        <field name="name">ensiasd.emploi.search</field>
+        <field name="model">ensiasd.emploi</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher">
+                <field name="filiere_id"/>
+                <field name="semestre"/>
+                <field name="annee_id"/>
+                <separator/>
+                <filter name="filter_draft" string="Brouillon" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_active" string="Actif" domain="[('state', '=', 'active')]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_filiere" string="Filière" context="{'group_by': 'filiere_id'}"/>
+                    <filter name="group_annee" string="Année" context="{'group_by': 'annee_id'}"/>
+                    <filter name="group_state" string="État" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ensiasd_emploi" model="ir.actions.act_window">
+        <field name="name">Emplois du temps</field>
+        <field name="res_model">ensiasd.emploi</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_ensiasd_emploi_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+    </record>
+</odoo>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Définition du rapport bulletin -->
+    <record id="action_report_bulletin" model="ir.actions.report">
+        <field name="name">Bulletin de notes</field>
+        <field name="model">ensiasd.bulletin</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ensiasd_grades.report_bulletin_template</field>
+        <field name="report_file">ensiasd_grades.report_bulletin_template</field>
+        <field name="print_report_name">'Bulletin_%s_%s' % (object.student_id.matricule, object.type_bulletin)</field>
+        <field name="binding_model_id" ref="model_ensiasd_bulletin"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Template du bulletin -->
+    <template id="report_bulletin_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- En-tête -->
+                        <div class="row" style="margin-bottom: 20px;">
+                            <div class="col-12 text-center">
+                                <h2>BULLETIN DE NOTES</h2>
+                                <h4><t t-esc="dict(doc._fields['type_bulletin'].selection).get(doc.type_bulletin)"/></h4>
+                                <p>Année académique: <t t-esc="doc.annee_id.name"/></p>
+                            </div>
+                        </div>
+
+                        <!-- Informations étudiant -->
+                        <div class="row" style="margin-bottom: 20px; border: 1px solid #ddd; padding: 10px;">
+                            <div class="col-6">
+                                <p><strong>Nom:</strong> <t t-esc="doc.student_id.name"/></p>
+                                <p><strong>CNE:</strong> <t t-esc="doc.student_cne"/></p>
+                                <p><strong>Matricule:</strong> <t t-esc="doc.student_matricule"/></p>
+                            </div>
+                            <div class="col-6">
+                                <p><strong>Filière:</strong> <t t-esc="doc.filiere_id.name"/></p>
+                                <p><strong>Niveau:</strong> <t t-esc="dict(doc.student_id._fields['niveau'].selection).get(doc.student_niveau)"/></p>
+                                <p><strong>Groupe:</strong> <t t-esc="doc.student_groupe.name" t-if="doc.student_groupe"/></p>
+                            </div>
+                        </div>
+
+                        <!-- Tableau des notes -->
+                        <table class="table table-bordered table-sm" style="font-size: 11px;">
+                            <thead style="background-color: #f0f0f0;">
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Module</th>
+                                    <th class="text-center">CC</th>
+                                    <th class="text-center">TP</th>
+                                    <th class="text-center">Examen</th>
+                                    <th class="text-center">Ratt.</th>
+                                    <th class="text-center">Finale</th>
+                                    <th class="text-center">Coef.</th>
+                                    <th class="text-center">Crédits</th>
+                                    <th class="text-center">Résultat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.line_ids" t-as="line">
+                                    <tr>
+                                        <td><t t-esc="line.module_code"/></td>
+                                        <td><t t-esc="line.module_name"/></td>
+                                        <td class="text-center"><t t-esc="'%.2f' % line.note_cc" t-if="line.note_cc"/></td>
+                                        <td class="text-center"><t t-esc="'%.2f' % line.note_tp" t-if="line.note_tp"/></td>
+                                        <td class="text-center"><t t-esc="'%.2f' % line.note_examen" t-if="line.note_examen"/></td>
+                                        <td class="text-center"><t t-esc="'%.2f' % line.note_rattrapage" t-if="line.note_rattrapage"/></td>
+                                        <td class="text-center" style="font-weight: bold;"><t t-esc="'%.2f' % line.note_finale"/></td>
+                                        <td class="text-center"><t t-esc="line.coefficient"/></td>
+                                        <td class="text-center"><t t-esc="line.credits"/></td>
+                                        <td class="text-center">
+                                            <span t-if="line.resultat == 'valide'" style="color: green;">V</span>
+                                            <span t-if="line.resultat == 'non_valide'" style="color: red;">NV</span>
+                                            <span t-if="line.resultat == 'rattrapage'" style="color: orange;">R</span>
+                                            <span t-if="line.resultat == 'elimine'" style="color: red;">E</span>
+                                            <span t-if="line.resultat == 'compense'" style="color: blue;">C</span>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- Résumé -->
+                        <div class="row" style="margin-top: 20px;">
+                            <div class="col-6">
+                                <table class="table table-bordered table-sm">
+                                    <tr>
+                                        <td><strong>Moyenne générale</strong></td>
+                                        <td class="text-center"><t t-esc="'%.2f' % doc.moyenne_generale"/>/20</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Moyenne pondérée</strong></td>
+                                        <td class="text-center" style="font-weight: bold; font-size: 14px;"><t t-esc="'%.2f' % doc.moyenne_ponderee"/>/20</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Crédits validés</strong></td>
+                                        <td class="text-center"><t t-esc="doc.credits_valides"/>/<t t-esc="doc.total_credits"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-bordered table-sm">
+                                    <tr>
+                                        <td><strong>Mention</strong></td>
+                                        <td class="text-center"><t t-esc="dict(doc._fields['mention'].selection).get(doc.mention)" t-if="doc.mention"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Rang</strong></td>
+                                        <td class="text-center"><t t-esc="doc.rang" t-if="doc.rang"/>/<t t-esc="doc.effectif" t-if="doc.effectif"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Décision</strong></td>
+                                        <td class="text-center" style="font-weight: bold;">
+                                            <t t-esc="dict(doc._fields['decision'].selection).get(doc.decision)" t-if="doc.decision"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Observations -->
+                        <div t-if="doc.observations" style="margin-top: 20px;">
+                            <p><strong>Observations:</strong> <t t-esc="doc.observations"/></p>
+                        </div>
+
+                        <!-- Signature -->
+                        <div class="row" style="margin-top: 40px;">
+                            <div class="col-6">
+                                <p>Date: <t t-esc="doc.date_generation.strftime('%d/%m/%Y')" t-if="doc.date_generation"/></p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p>Le Directeur</p>
+                                <br/><br/>
+                                <p t-if="doc.signed_by"><t t-esc="doc.signed_by.name"/></p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

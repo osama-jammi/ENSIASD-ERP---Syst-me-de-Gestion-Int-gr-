@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue wizard génération séances -->
+    <record id="view_generate_seances_wizard_form" model="ir.ui.view">
+        <field name="name">ensiasd.generate.seances.wizard.form</field>
+        <field name="model">ensiasd.generate.seances.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Générer les séances">
+                <group invisible="state != 'config'">
+                    <group string="Emploi du temps">
+                        <field name="emploi_id"/>
+                    </group>
+                    <group string="Période de génération">
+                        <field name="date_debut"/>
+                        <field name="date_fin"/>
+                    </group>
+                    <group string="Options">
+                        <field name="exclure_vacances"/>
+                        <field name="envoyer_notifications"/>
+                    </group>
+                </group>
+                <group invisible="state != 'done'">
+                    <div class="alert alert-success" role="alert">
+                        <h4>Séances générées avec succès!</h4>
+                        <p><strong><field name="seances_count" class="oe_inline"/></strong> séances ont été créées.</p>
+                    </div>
+                </group>
+                <field name="state" invisible="1"/>
+                <footer>
+                    <button name="action_generate" string="Générer" type="object"
+                            class="btn-primary" invisible="state != 'config'"/>
+                    <button name="action_view_seances" string="Voir les séances" type="object"
+                            class="btn-success" invisible="state != 'done'"/>
+                    <button string="Fermer" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action wizard -->
+    <record id="action_generate_seances_wizard" model="ir.actions.act_window">
+        <field name="name">Générer les séances</field>
+        <field name="res_model">ensiasd.generate.seances.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
