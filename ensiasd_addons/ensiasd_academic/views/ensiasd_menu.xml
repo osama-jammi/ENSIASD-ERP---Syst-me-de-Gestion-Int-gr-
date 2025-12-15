@@ -30,18 +30,6 @@
               action="action_ensiasd_element"
               sequence="3"/>
 
-    <!-- Sous-menu Planning -->
-    <menuitem id="menu_ensiasd_planning"
-              name="Planning"
-              parent="menu_ensiasd_academic_root"
-              sequence="2"/>
-
-    <menuitem id="menu_ensiasd_seance"
-              name="Séances"
-              parent="menu_ensiasd_planning"
-              action="action_ensiasd_seance"
-              sequence="1"/>
-
     <!-- Sous-menu Inscriptions -->
     <menuitem id="menu_ensiasd_inscriptions"
               name="Inscriptions"

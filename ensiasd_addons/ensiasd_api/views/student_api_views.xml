@@ -1,48 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Extension de la vue formulaire étudiant pour ajouter le bouton mot de passe API -->
+    <!-- Extension de la vue formulaire étudiant pour ajouter les boutons API -->
     <record id="view_ensiasd_student_form_api" model="ir.ui.view">
         <field name="name">ensiasd.student.form.api</field>
         <field name="model">ensiasd.student</field>
         <field name="inherit_id" ref="ensiasd_student.view_ensiasd_student_form"/>
         <field name="arch" type="xml">
+            <!-- Boutons dans le header -->
             <xpath expr="//header" position="inside">
-                <button name="action_set_api_password"
-                        string="Définir mot de passe API"
+                <button name="action_regenerate_api_password"
+                        string="Régénérer mot de passe API"
                         type="object"
-                        class="btn-secondary"
+                        class="btn-warning"
+                        icon="fa-refresh"
+                        invisible="not api_enabled"
+                        groups="ensiasd_core.group_ensiasd_admin,ensiasd_core.group_ensiasd_scolarite"/>
+
+                <button name="action_show_api_credentials"
+                        string="Voir identifiants API"
+                        type="object"
+                        class="btn-info"
+                        icon="fa-key"
+                        invisible="not api_enabled"
                         groups="ensiasd_core.group_ensiasd_admin,ensiasd_core.group_ensiasd_scolarite"/>
             </xpath>
+
+            <!-- Champs API après partner_id -->
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="api_enabled"/>
-                <field name="last_api_login" readonly="1"/>
+                <field name="api_enabled" widget="boolean_toggle"/>
+                <field name="last_api_login" readonly="1" invisible="not api_enabled"/>
+                <field name="api_password_hash" invisible="1"/>
+            </xpath>
+
+            <!-- Ajouter une page pour les infos API dans le notebook -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Accès API" name="api_access"
+                      invisible="not api_enabled"
+                      groups="ensiasd_core.group_ensiasd_admin,ensiasd_core.group_ensiasd_scolarite">
+                    <group>
+                        <group string="Statut API">
+                            <field name="api_enabled" readonly="1"/>
+                            <field name="last_api_login" readonly="1"/>
+                            <label for="api_password_hash" string="Mot de passe défini"/>
+                            <div>
+                                <field name="api_password_hash" readonly="1" invisible="1"/>
+                                <span class="badge badge-success" invisible="not api_password_hash">
+                                    <i class="fa fa-check"/> Configuré
+                                </span>
+                                <span class="badge badge-warning" invisible="api_password_hash">
+                                    <i class="fa fa-warning"/> Non configuré
+                                </span>
+                            </div>
+                        </group>
+                        <group string="Format du mot de passe">
+                            <div class="alert alert-info" role="alert">
+                                <strong>Format automatique:</strong><br/>
+                                CNE + CIN<br/>
+                                <em>Exemple: K1234567+AB123456</em>
+                            </div>
+                        </group>
+                    </group>
+
+                    <group string="Actions rapides">
+                        <button name="action_regenerate_api_password"
+                                string="Régénérer le mot de passe"
+                                type="object"
+                                class="btn-warning"
+                                icon="fa-refresh"/>
+
+                        <button name="action_show_api_credentials"
+                                string="Afficher les identifiants"
+                                type="object"
+                                class="btn-info"
+                                icon="fa-eye"/>
+                    </group>
+
+                    <group string="⚠️ Sécurité">
+                        <div class="alert alert-warning" role="alert">
+                            <strong>Important:</strong>
+                            <ul>
+                                <li>Le mot de passe est généré automatiquement (CNE+CIN)</li>
+                                <li>Il est hashé et ne peut pas être récupéré</li>
+                                <li>L'étudiant doit utiliser: CNE comme login, CNE+CIN comme mot de passe</li>
+                                <li>En cas d'oubli, régénérez un nouveau mot de passe</li>
+                            </ul>
+                        </div>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>
 
-    <!-- Wizard pour définir le mot de passe -->
-    <record id="view_set_api_password_wizard" model="ir.ui.view">
-        <field name="name">set.api.password.wizard.form</field>
-        <field name="model">set.api.password.wizard</field>
+    <!-- Vue liste enrichie -->
+    <record id="view_ensiasd_student_tree_api" model="ir.ui.view">
+        <field name="name">ensiasd.student.tree.api</field>
+        <field name="model">ensiasd.student</field>
+        <field name="inherit_id" ref="ensiasd_student.view_ensiasd_student_tree"/>
         <field name="arch" type="xml">
-            <form string="Définir le mot de passe API">
-                <group>
-                    <field name="student_id" readonly="1"/>
-                    <field name="password" password="True"/>
-                    <field name="confirm_password" password="True"/>
-                </group>
-                <footer>
-                    <button name="action_set_password" string="Définir" type="object" class="btn-primary"/>
-                    <button string="Annuler" class="btn-secondary" special="cancel"/>
-                </footer>
-            </form>
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="api_enabled" widget="boolean_toggle" optional="hide"/>
+                <field name="last_api_login" optional="hide"/>
+            </xpath>
         </field>
     </record>
 
-    <record id="action_set_api_password_wizard" model="ir.actions.act_window">
-        <field name="name">Définir mot de passe API</field>
-        <field name="res_model">set.api.password.wizard</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
+    <!-- Filtre de recherche pour API -->
+    <record id="view_ensiasd_student_search_api" model="ir.ui.view">
+        <field name="name">ensiasd.student.search.api</field>
+        <field name="model">ensiasd.student</field>
+        <field name="inherit_id" ref="ensiasd_student.view_ensiasd_student_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='actif']" position="after">
+                <separator/>
+                <filter name="filter_api_enabled"
+                        string="API activée"
+                        domain="[('api_enabled', '=', True)]"/>
+                <filter name="filter_api_connected"
+                        string="Déjà connectés API"
+                        domain="[('last_api_login', '!=', False)]"/>
+            </xpath>
+        </field>
     </record>
 </odoo>

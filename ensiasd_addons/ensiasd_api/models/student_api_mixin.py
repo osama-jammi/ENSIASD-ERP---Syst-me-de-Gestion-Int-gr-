@@ -12,6 +12,72 @@ class EnsiasdStudentApiMixin(models.Model):
     api_enabled = fields.Boolean(string='Accès API activé', default=True)
     last_api_login = fields.Datetime(string='Dernière connexion API')
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        Surcharge de create pour générer automatiquement le mot de passe API
+        si api_enabled est True et que CNE + CIN sont fournis
+        """
+        records = super().create(vals_list)
+
+        for record in records:
+            # Générer le mot de passe API automatiquement si activé
+            if record.api_enabled and record.cne and record.cin:
+                auto_password = self._generate_auto_password(record.cne, record.cin)
+                record.set_api_password(auto_password)
+
+                # Logger l'événement
+                record.message_post(
+                    body=f"Mot de passe API généré automatiquement (CNE+CIN)",
+                    subject="Activation API"
+                )
+
+        return records
+
+    def write(self, vals):
+        """
+        Surcharge de write pour régénérer le mot de passe si CNE ou CIN change
+        """
+        res = super().write(vals)
+
+        # Si CNE ou CIN change et que l'API est activée
+        if ('cne' in vals or 'cin' in vals) and self.api_enabled:
+            for record in self:
+                if record.cne and record.cin and not record.api_password_hash:
+                    auto_password = self._generate_auto_password(record.cne, record.cin)
+                    record.set_api_password(auto_password)
+
+        # Si api_enabled passe à True et pas encore de mot de passe
+        if vals.get('api_enabled') and not self.api_password_hash:
+            for record in self:
+                if record.cne and record.cin:
+                    auto_password = self._generate_auto_password(record.cne, record.cne)
+                    record.set_api_password(auto_password)
+
+        return res
+
+    @api.model
+    def _generate_auto_password(self, cne, cin):
+        """
+        Génère un mot de passe automatique basé sur CNE + CIN
+        Format: CNE+CIN (ex: K1234567+AB123456)
+
+        Args:
+            cne (str): Code National Étudiant
+            cin (str): Carte d'Identité Nationale
+
+        Returns:
+            str: Mot de passe généré
+        """
+        # Nettoyer les espaces
+        cne = str(cne).strip() if cne else ''
+        cin = str(cin).strip() if cin else ''
+
+        # Format: CNE+CIN
+        password = f"{cne}+{cin}"
+
+        return password
+
     def set_api_password(self, password):
         """Définit le mot de passe API de l'étudiant"""
         password_hash = hashlib.sha256(password.encode()).hexdigest()
@@ -36,6 +102,73 @@ class EnsiasdStudentApiMixin(models.Model):
             'target': 'new',
             'context': {
                 'default_student_id': self.id,
+            }
+        }
+
+    def action_regenerate_api_password(self):
+        """
+        Action pour régénérer le mot de passe API
+        Accessible depuis l'interface
+        """
+        self.ensure_one()
+
+        if not self.cne or not self.cin:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': 'Erreur',
+                    'message': 'CNE et CIN requis pour générer le mot de passe',
+                    'type': 'danger',
+                }
+            }
+
+        # Générer le nouveau mot de passe
+        new_password = self._generate_auto_password(self.cne, self.cin)
+        self.set_api_password(new_password)
+
+        # Message de confirmation avec le mot de passe (ATTENTION: à ne montrer qu'une fois!)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Mot de passe régénéré',
+                'message': f'Nouveau mot de passe API: {new_password}',
+                'type': 'success',
+                'sticky': True,  # Reste affiché
+            }
+        }
+
+
+    def action_show_api_credentials(self):
+        """
+        Affiche les identifiants API de l'étudiant
+        (Utile pour le support)
+        """
+        self.ensure_one()
+
+        if not self.api_enabled:
+            message = "L'accès API n'est pas activé pour cet étudiant"
+        elif not self.api_password_hash:
+            message = "Aucun mot de passe API défini. Utilisez 'Régénérer mot de passe API'"
+        else:
+            # Ne jamais afficher le vrai mot de passe!
+            message = f"""
+            Identifiants API:
+            - CNE: {self.cne}
+            - Mot de passe: CNE+CIN (Format: {self.cne}+{self.cin if self.cin else 'XXXX'})
+            - Statut: {'Actif' if self.api_enabled else 'Inactif'}
+            - Dernière connexion: {self.last_api_login or 'Jamais'}
+            """
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Identifiants API',
+                'message': message,
+                'type': 'info',
+                'sticky': True,
             }
         }
 

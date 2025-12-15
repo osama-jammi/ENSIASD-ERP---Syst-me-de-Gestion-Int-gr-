@@ -7,6 +7,9 @@ access_emploi_ligne_public,ensiasd.emploi.ligne.public,model_ensiasd_emploi_lign
 access_emploi_ligne_manager,ensiasd.emploi.ligne.manager,model_ensiasd_emploi_ligne,ensiasd_timetable.group_timetable_manager,1,1,1,1
 access_indisponibilite_public,ensiasd.indisponibilite.public,model_ensiasd_indisponibilite,base.group_user,1,0,0,0
 access_indisponibilite_manager,ensiasd.indisponibilite.manager,model_ensiasd_indisponibilite,ensiasd_timetable.group_timetable_manager,1,1,1,1
+access_seance_admin,ensiasd.seance.admin,model_ensiasd_seance,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_seance_teacher,ensiasd.seance.teacher,model_ensiasd_seance,ensiasd_core.group_ensiasd_teacher,1,1,1,0
+access_seance_public,ensiasd.seance.public,model_ensiasd_seance,base.group_user,1,0,0,0
 access_generate_timetable_wizard,ensiasd.generate.timetable.wizard,model_ensiasd_generate_timetable_wizard,ensiasd_timetable.group_timetable_manager,1,1,1,1
 access_generate_seances_wizard,ensiasd.generate.seances.wizard,model_ensiasd_generate_seances_wizard,ensiasd_timetable.group_timetable_manager,1,1,1,1
 access_filiere_timetable,ensiasd.filiere.timetable,ensiasd_academic.model_ensiasd_filiere,ensiasd_timetable.group_timetable_manager,1,1,0,0
@@ -15,4 +18,3 @@ access_module_timetable,ensiasd.module.timetable,ensiasd_academic.model_ensiasd_
 access_groupe_timetable,ensiasd.groupe.timetable,ensiasd_student.model_ensiasd_groupe,ensiasd_timetable.group_timetable_manager,1,1,0,0
 access_annee_timetable,ensiasd.annee.timetable,ensiasd_core.model_ensiasd_annee,ensiasd_timetable.group_timetable_manager,1,0,0,0
 access_salle_timetable,ensiasd.salle.timetable,ensiasd_core.model_ensiasd_salle,ensiasd_timetable.group_timetable_manager,1,1,0,0
-access_seance_timetable,ensiasd.seance.timetable,ensiasd_academic.model_ensiasd_seance,ensiasd_timetable.group_timetable_manager,1,1,1,1

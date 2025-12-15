@@ -17,11 +17,18 @@
               action="action_ensiasd_emploi"
               sequence="1"/>
 
+    <!-- Menu Séances - CREATE OUR OWN ACTION INSTEAD OF REFERENCING EXTERNAL ONE -->
+    <menuitem id="menu_ensiasd_seance"
+              name="Séances"
+              parent="menu_timetable_planning"
+              action="action_ensiasd_seance"
+              sequence="2"/>
+
     <menuitem id="menu_ensiasd_seance_calendar"
-              name="Planning séances"
+              name="Planning séances (Calendrier)"
               parent="menu_timetable_planning"
               action="action_ensiasd_seance_calendar"
-              sequence="2"/>
+              sequence="3"/>
 
     <!-- Sous-menu Génération -->
     <menuitem id="menu_timetable_generate"

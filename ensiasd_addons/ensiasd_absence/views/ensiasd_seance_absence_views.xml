@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extension de la vue liste -->
+    <record id="view_ensiasd_seance_tree_absence" model="ir.ui.view">
+        <field name="name">ensiasd.seance.tree.absence</field>
+        <field name="model">ensiasd.seance</field>
+        <field name="inherit_id" ref="ensiasd_timetable.view_ensiasd_seance_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="absence_count"/>
+                <field name="taux_presence" widget="progressbar"/>
+                <field name="appel_fait"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Extension de la vue formulaire -->
+    <record id="view_ensiasd_seance_form_absence" model="ir.ui.view">
+        <field name="name">ensiasd.seance.form.absence</field>
+        <field name="model">ensiasd.seance</field>
+        <field name="inherit_id" ref="ensiasd_timetable.view_ensiasd_seance_form"/>
+        <field name="arch" type="xml">
+            <!-- Ajouter les boutons dans le header -->
+            <xpath expr="//header" position="inside">
+                <button name="action_open_appel" string="Faire l'appel" type="object"
+                        class="btn-primary" icon="fa-check-square-o"/>
+                <button name="action_send_appel_email" string="Envoyer formulaire" type="object"
+                        class="btn-secondary" icon="fa-envelope"/>
+            </xpath>
+
+            <!-- Ajouter le button box -->
+            <xpath expr="//sheet" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_absences" type="object"
+                            class="oe_stat_button" icon="fa-user-times">
+                        <field name="absence_count" widget="statinfo" string="Absences"/>
+                    </button>
+                </div>
+            </xpath>
+
+            <!-- Ajouter le groupe Présences après le dernier groupe -->
+            <xpath expr="//sheet/group[last()]" position="after">
+                <group string="Présences">
+                    <field name="total_etudiants" readonly="1"/>
+                    <field name="presence_count" readonly="1"/>
+                    <field name="absence_count" readonly="1"/>
+                    <field name="taux_presence" widget="progressbar" readonly="1"/>
+                    <field name="appel_fait"/>
+                    <field name="date_appel" invisible="not appel_fait"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

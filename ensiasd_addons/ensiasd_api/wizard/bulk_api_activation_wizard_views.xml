@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vue formulaire du wizard -->
+    <record id="view_bulk_api_activation_wizard_form" model="ir.ui.view">
+        <field name="name">bulk.api.activation.wizard.form</field>
+        <field name="model">bulk.api.activation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Activation API en masse">
+                <group>
+                    <group string="Statistiques">
+                        <field name="total_students" readonly="1"/>
+                        <field name="with_cne_cin" readonly="1"/>
+                        <field name="without_password" readonly="1"/>
+                        <field name="already_active" readonly="1"/>
+                    </group>
+
+                    <group string="Options">
+                        <field name="activate_api"/>
+                        <field name="regenerate_passwords"/>
+                        <field name="only_missing_passwords"
+                               invisible="not regenerate_passwords"/>
+                    </group>
+                </group>
+
+                <group>
+                    <field name="student_ids" nolabel="1">
+                        <tree>
+                            <field name="matricule"/>
+                            <field name="name"/>
+                            <field name="cne"/>
+                            <field name="cin"/>
+                            <field name="api_enabled" widget="boolean_toggle"/>
+                            <field name="api_password_hash" invisible="1"/>
+                            <button name="%(action_set_api_password_wizard)d"
+                                    string="Config mdp"
+                                    type="action"
+                                    icon="fa-key"
+                                    context="{'default_student_id': active_id}"/>
+                        </tree>
+                    </field>
+                </group>
+
+                <div class="alert alert-warning" role="alert">
+                    <strong>⚠️ Attention:</strong>
+                    <ul>
+                        <li>Le mot de passe sera généré au format: <code>CNE+CIN</code></li>
+                        <li>Les étudiants doivent utiliser leur CNE comme login</li>
+                        <li>Seuls les étudiants avec CNE et CIN seront traités</li>
+                        <li>Les mots de passe existants seront écrasés si l'option est cochée</li>
+                    </ul>
+                </div>
+
+                <footer>
+                    <button name="action_activate"
+                            string="Activer et générer"
+                            type="object"
+                            class="btn-primary"/>
+
+                    <button name="action_export_credentials"
+                            string="Exporter les identifiants (CSV)"
+                            type="object"
+                            class="btn-warning"
+                            confirm="⚠️ ATTENTION: Ce fichier contiendra les mots de passe en clair! À manipuler avec précaution. Continuer?"/>
+
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action pour ouvrir le wizard -->
+    <record id="action_bulk_api_activation_wizard" model="ir.actions.act_window">
+        <field name="name">Activer API en masse</field>
+        <field name="res_model">bulk.api.activation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="ensiasd_student.model_ensiasd_student"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+    <!-- Menu dans API -->
+    <menuitem id="menu_bulk_api_activation"
+              name="Activation API en masse"
+              parent="menu_ensiasd_api"
+              action="action_bulk_api_activation_wizard"
+              sequence="10"
+              groups="ensiasd_core.group_ensiasd_admin"/>
+</odoo>

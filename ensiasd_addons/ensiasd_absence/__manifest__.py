@@ -30,7 +30,7 @@ ENSIASD - Gestion des Absences v2.0
     'depends': [
         'ensiasd_core',
         'ensiasd_student',
-        'ensiasd_academic',
+        'ensiasd_timetable',
         'mail',
         'website',
     ],
@@ -43,6 +43,7 @@ ENSIASD - Gestion des Absences v2.0
 
         # Views - Load regular views first
         'views/ensiasd_absence_views.xml',
+        'views/ensiasd_seance_absence_views.xml',
         'views/absence_templates.xml',
 
         # Wizards - MUST be loaded BEFORE menus that reference them

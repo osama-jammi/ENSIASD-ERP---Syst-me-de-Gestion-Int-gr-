@@ -33,19 +33,6 @@
                             <field name="enseignant_id"/>
                         </group>
                     </group>
-                    <notebook>
-                        <page string="Séances">
-                            <field name="seance_ids">
-                                <tree>
-                                    <field name="date"/>
-                                    <field name="heure_debut" widget="float_time"/>
-                                    <field name="heure_fin" widget="float_time"/>
-                                    <field name="salle_id"/>
-                                    <field name="state"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
                 </sheet>
             </form>
         </field>

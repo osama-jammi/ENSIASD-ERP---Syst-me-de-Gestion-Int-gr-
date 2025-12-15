@@ -21,7 +21,6 @@ class EnsiasdElement(models.Model):
     coefficient = fields.Float(string='Coefficient', default=1.0)
     enseignant_id = fields.Many2one('hr.employee', string='Enseignant',
                                      domain=[('is_enseignant', '=', True)])
-    seance_ids = fields.One2many('ensiasd.seance', 'element_id', string='Séances')
 
     def name_get(self):
         return [(r.id, f"{r.module_id.code} - {r.name} ({r.type_element.upper()})") for r in self]

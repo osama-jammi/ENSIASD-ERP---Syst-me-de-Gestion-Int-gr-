@@ -36,7 +36,7 @@ ENSIASD - Gestion des Emplois du Temps
         # Security
         'security/timetable_security.xml',
         'security/ir.model.access.csv',
-        # Data
+        # # Data
         'data/creneau_data.xml',
         'data/cron_data.xml',
         # Views - Load in correct order
@@ -44,7 +44,7 @@ ENSIASD - Gestion des Emplois du Temps
         'views/ensiasd_emploi_views.xml',
         'views/ensiasd_emploi_ligne_views.xml',
         'views/ensiasd_indisponibilite_views.xml',
-        'views/ensiasd_seance_extend_views.xml',
+        'views/ensiasd_seance_views.xml',  # AJOUTÉ
         # Wizards - Load BEFORE menus that reference them
         'wizard/generate_timetable_wizard_views.xml',
         'wizard/generate_seances_wizard_views.xml',

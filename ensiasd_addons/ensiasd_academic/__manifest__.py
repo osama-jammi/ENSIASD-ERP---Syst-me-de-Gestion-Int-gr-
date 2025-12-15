@@ -29,7 +29,6 @@
         'views/ensiasd_filiere_views.xml',
         'views/ensiasd_module_views.xml',
         'views/ensiasd_element_views.xml',
-        'views/ensiasd_seance_views.xml',
         'views/ensiasd_inscription_views.xml',
         'views/hr_employee_views.xml',
         'views/ensiasd_menu.xml',
