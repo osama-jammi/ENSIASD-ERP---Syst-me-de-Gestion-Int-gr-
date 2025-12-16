@@ -30,18 +30,6 @@
               action="action_ensiasd_element"
               sequence="3"/>
 
-    <!-- Sous-menu Inscriptions -->
-    <menuitem id="menu_ensiasd_inscriptions"
-              name="Inscriptions"
-              parent="menu_ensiasd_academic_root"
-              sequence="3"/>
-
-    <menuitem id="menu_ensiasd_inscription"
-              name="Inscriptions aux modules"
-              parent="menu_ensiasd_inscriptions"
-              action="action_ensiasd_inscription"
-              sequence="1"/>
-
     <!-- Sous-menu Enseignants (lien vers hr) -->
     <menuitem id="menu_ensiasd_enseignants"
               name="Enseignants"

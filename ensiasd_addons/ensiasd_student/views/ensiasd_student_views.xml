@@ -8,9 +8,11 @@
                 <field name="matricule"/>
                 <field name="name"/>
                 <field name="cne"/>
+                <field name="filiere_id"/>
                 <field name="email"/>
                 <field name="groupe_id"/>
                 <field name="niveau"/>
+                <field name="inscription_count"/>
                 <field name="state" widget="badge"/>
             </tree>
         </field>
@@ -22,18 +24,35 @@
         <field name="arch" type="xml">
             <form string="Étudiant">
                 <header>
-                    <button name="action_inscrire" string="Inscrire" type="object" class="btn-primary" invisible="state != 'draft'"/>
-                    <button name="action_activer" string="Activer" type="object" class="btn-success" invisible="state != 'inscrit'"/>
-                    <button name="action_suspendre" string="Suspendre" type="object" class="btn-warning" invisible="state not in ['actif', 'inscrit']"/>
-                    <button name="action_diplomer" string="Diplômer" type="object" invisible="state != 'actif'"/>
+                    <button name="action_inscrire" string="Inscrire" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_activer" string="Activer" type="object"
+                            class="btn-success" invisible="state != 'inscrit'"/>
+                    <button name="action_suspendre" string="Suspendre" type="object"
+                            class="btn-warning" invisible="state not in ['actif', 'inscrit']"/>
+                    <button name="action_diplomer" string="Diplômer" type="object"
+                            invisible="state != 'actif'"/>
+                    <button name="action_inscribe_next_year" string="Réinscrire année suivante"
+                            type="object" class="btn-secondary" icon="fa-level-up"
+                            invisible="state != 'actif' or niveau == '3'"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
                     <field name="image" widget="image" class="oe_avatar"/>
+
+                    <!-- Button Box -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_inscriptions" type="object"
+                                class="oe_stat_button" icon="fa-book">
+                            <field name="inscription_count" string="Inscriptions" widget="statinfo"/>
+                        </button>
+                    </div>
+
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Nom complet"/></h1>
                         <h3><field name="matricule"/></h3>
                     </div>
+
                     <group>
                         <group string="Identifiants">
                             <field name="cne"/>
@@ -42,11 +61,14 @@
                             <field name="partner_id" readonly="1"/>
                         </group>
                         <group string="Affectation">
+                            <field name="filiere_id" options="{'no_create': True}"/>
                             <field name="groupe_id"/>
                             <field name="niveau"/>
+                            <field name="annee_inscription"/>
                             <field name="annee_courante_id"/>
                         </group>
                     </group>
+
                     <notebook>
                         <page string="Informations personnelles">
                             <group>
@@ -64,6 +86,21 @@
                                 </group>
                             </group>
                         </page>
+
+                        <page string="Inscriptions aux modules" name="inscriptions">
+                            <field name="inscription_ids">
+                                <tree>
+                                    <field name="module_id"/>
+                                    <field name="semestre"/>
+                                    <field name="annee_id"/>
+                                    <field name="date_inscription"/>
+                                    <field name="note_count"/>
+                                    <field name="moyenne_module"/>
+                                    <field name="state" widget="badge"/>
+                                </tree>
+                            </field>
+                        </page>
+
                         <page string="Contact d'urgence">
                             <group>
                                 <field name="contact_urgence_nom"/>
@@ -85,6 +122,7 @@
                 <field name="name"/>
                 <field name="image"/>
                 <field name="matricule"/>
+                <field name="filiere_id"/>
                 <field name="groupe_id"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -95,6 +133,7 @@
                             <div class="oe_kanban_details">
                                 <strong><field name="name"/></strong>
                                 <div><field name="matricule"/></div>
+                                <div><field name="filiere_id"/></div>
                                 <div><field name="groupe_id"/></div>
                             </div>
                         </div>
@@ -112,11 +151,17 @@
                 <field name="name"/>
                 <field name="cne"/>
                 <field name="matricule"/>
+                <field name="filiere_id"/>
+                <separator/>
                 <filter string="Actifs" name="actif" domain="[('state', '=', 'actif')]"/>
+                <filter string="Inscrits" name="inscrit" domain="[('state', '=', 'inscrit')]"/>
+                <separator/>
                 <filter string="1ère année" name="niveau_1" domain="[('niveau', '=', '1')]"/>
                 <filter string="2ème année" name="niveau_2" domain="[('niveau', '=', '2')]"/>
                 <filter string="3ème année" name="niveau_3" domain="[('niveau', '=', '3')]"/>
+                <separator/>
                 <group expand="0" string="Grouper par">
+                    <filter string="Filière" name="group_filiere" context="{'group_by': 'filiere_id'}"/>
                     <filter string="Groupe" name="group_groupe" context="{'group_by': 'groupe_id'}"/>
                     <filter string="Niveau" name="group_niveau" context="{'group_by': 'niveau'}"/>
                     <filter string="État" name="group_state" context="{'group_by': 'state'}"/>
@@ -131,7 +176,13 @@
         <field name="view_mode">tree,kanban,form</field>
         <field name="context">{'search_default_actif': 1}</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">Ajouter un nouvel étudiant</p>
+            <p class="o_view_nocontent_smiling_face">
+                Ajouter un nouvel étudiant
+            </p>
+            <p>
+                Lors de l'inscription, l'étudiant sera automatiquement inscrit
+                aux modules obligatoires de 1ère année de sa filière.
+            </p>
         </field>
     </record>
 </odoo>

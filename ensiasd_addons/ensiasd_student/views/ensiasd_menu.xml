@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- 
-    MENU PRINCIPAL DE L'APPLICATION ÉTUDIANTS
-    Ceci crée une icône dans le menu principal d'Odoo (comme Ventes, Achats, etc.)
-    -->
-    
-    <!-- Menu racine de l'application - visible dans le launcher -->
+    <!-- Menu racine de l'application -->
     <menuitem id="menu_ensiasd_student_root"
               name="Étudiants"
               sequence="10"
               web_icon="ensiasd_student,static/description/icon.png"/>
 
-    <!-- Sous-menus -->
+    <!-- Sous-menu Étudiants -->
     <menuitem id="menu_ensiasd_student_main"
               name="Étudiants"
               parent="menu_ensiasd_student_root"
@@ -28,6 +23,18 @@
               parent="menu_ensiasd_student_main"
               action="action_ensiasd_groupe"
               sequence="2"/>
+
+    <!-- Sous-menu Inscriptions -->
+    <menuitem id="menu_ensiasd_inscriptions"
+              name="Inscriptions"
+              parent="menu_ensiasd_student_root"
+              sequence="2"/>
+
+    <menuitem id="menu_ensiasd_inscription"
+              name="Inscriptions aux modules"
+              parent="menu_ensiasd_inscriptions"
+              action="action_ensiasd_inscription"
+              sequence="1"/>
 
     <!-- Menu Configuration -->
     <menuitem id="menu_ensiasd_student_config"

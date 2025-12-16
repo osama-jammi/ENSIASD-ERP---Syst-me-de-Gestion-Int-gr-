@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue liste des inscriptions -->
+    <record id="view_ensiasd_inscription_tree" model="ir.ui.view">
+        <field name="name">ensiasd.inscription.tree</field>
+        <field name="model">ensiasd.inscription</field>
+        <field name="arch" type="xml">
+            <tree string="Inscriptions">
+                <field name="student_id"/>
+                <field name="filiere_id"/>
+                <field name="module_id"/>
+                <field name="semestre"/>
+                <field name="annee_id"/>
+                <field name="date_inscription"/>
+                <field name="note_count"/>
+                <field name="moyenne_module"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire des inscriptions -->
+    <record id="view_ensiasd_inscription_form" model="ir.ui.view">
+        <field name="name">ensiasd.inscription.form</field>
+        <field name="model">ensiasd.inscription</field>
+        <field name="arch" type="xml">
+            <form string="Inscription">
+                <header>
+                    <button name="action_confirm" string="Confirmer" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_validate" string="Valider" type="object"
+                            class="btn-success" invisible="state != 'confirmed'"/>
+                    <button name="action_cancel" string="Annuler" type="object"
+                            invisible="state in ['cancelled', 'validated']"/>
+                    <button name="action_view_notes" string="Voir les notes" type="object"
+                            class="btn-secondary" icon="fa-list-alt"
+                            invisible="state != 'validated'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Étudiant">
+                            <field name="student_id"/>
+                            <field name="filiere_id" readonly="1"/>
+                        </group>
+                        <group string="Module">
+                            <field name="module_id"/>
+                            <field name="semestre" readonly="1"/>
+                            <field name="annee_id"/>
+                            <field name="date_inscription"/>
+                        </group>
+                    </group>
+                    <group string="Statistiques" invisible="state != 'validated'">
+                        <group>
+                            <field name="note_count"/>
+                            <field name="moyenne_module"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue recherche -->
+    <record id="view_ensiasd_inscription_search" model="ir.ui.view">
+        <field name="name">ensiasd.inscription.search</field>
+        <field name="model">ensiasd.inscription</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher des inscriptions">
+                <field name="student_id"/>
+                <field name="module_id"/>
+                <field name="filiere_id"/>
+                <separator/>
+                <filter string="Brouillon" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmées" name="filter_confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Validées" name="filter_validated" domain="[('state', '=', 'validated')]"/>
+                <separator/>
+                <filter string="S1" name="filter_s1" domain="[('semestre', '=', 'S1')]"/>
+                <filter string="S2" name="filter_s2" domain="[('semestre', '=', 'S2')]"/>
+                <filter string="S3" name="filter_s3" domain="[('semestre', '=', 'S3')]"/>
+                <filter string="S4" name="filter_s4" domain="[('semestre', '=', 'S4')]"/>
+                <filter string="S5" name="filter_s5" domain="[('semestre', '=', 'S5')]"/>
+                <filter string="S6" name="filter_s6" domain="[('semestre', '=', 'S6')]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Étudiant" name="group_student" context="{'group_by': 'student_id'}"/>
+                    <filter string="Filière" name="group_filiere" context="{'group_by': 'filiere_id'}"/>
+                    <filter string="Module" name="group_module" context="{'group_by': 'module_id'}"/>
+                    <filter string="Année" name="group_annee" context="{'group_by': 'annee_id'}"/>
+                    <filter string="Semestre" name="group_semestre" context="{'group_by': 'semestre'}"/>
+                    <filter string="État" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_ensiasd_inscription" model="ir.actions.act_window">
+        <field name="name">Inscriptions aux modules</field>
+        <field name="res_model">ensiasd.inscription</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_filter_validated': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune inscription trouvée
+            </p>
+            <p>
+                Les inscriptions sont créées automatiquement lors de
+                l'inscription d'un étudiant à une filière.
+            </p>
+        </field>
+    </record>
+</odoo>
