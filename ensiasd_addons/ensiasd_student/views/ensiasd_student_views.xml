@@ -25,16 +25,20 @@
             <form string="Étudiant">
                 <header>
                     <button name="action_inscrire" string="Inscrire" type="object"
-                            class="btn-primary" invisible="state != 'draft'"/>
+                            class="btn-primary" invisible="state != 'draft'"
+                            help="Inscrire l'étudiant et l'ajouter automatiquement aux modules de 1ère année"/>
                     <button name="action_activer" string="Activer" type="object"
                             class="btn-success" invisible="state != 'inscrit'"/>
                     <button name="action_suspendre" string="Suspendre" type="object"
                             class="btn-warning" invisible="state not in ['actif', 'inscrit']"/>
                     <button name="action_diplomer" string="Diplômer" type="object"
-                            invisible="state != 'actif'"/>
+                            invisible="state != 'actif' or niveau != '3'"
+                            help="Marquer l'étudiant comme diplômé"/>
                     <button name="action_inscribe_next_year" string="Réinscrire année suivante"
                             type="object" class="btn-secondary" icon="fa-level-up"
-                            invisible="state != 'actif' or niveau == '3'"/>
+                            invisible="state != 'actif' or niveau == '3'"
+                            confirm="Êtes-vous sûr de vouloir réinscrire cet étudiant à l'année supérieure ?"
+                            help="Passer l'étudiant au niveau supérieur et l'inscrire aux modules correspondants"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -53,19 +57,33 @@
                         <h3><field name="matricule"/></h3>
                     </div>
 
+                    <!-- Alertes -->
+                    <div class="alert alert-warning" role="alert" invisible="annee_courante_id">
+                        <strong>Attention!</strong> L'année académique courante n'est pas définie.
+                        Veuillez la définir avant d'inscrire l'étudiant.
+                    </div>
+
+                    <div class="alert alert-info" role="alert" invisible="state != 'draft' or not filiere_id">
+                        <strong>Info:</strong> Lors de l'inscription, l'étudiant sera automatiquement
+                        inscrit aux modules obligatoires de 1ère année de la filière
+                        <field name="filiere_id" readonly="1" class="oe_inline"/>.
+                    </div>
+
                     <group>
                         <group string="Identifiants">
                             <field name="cne"/>
                             <field name="cin"/>
                             <field name="email"/>
-                            <field name="partner_id" readonly="1"/>
+                            <field name="partner_id" readonly="1" groups="base.group_no_one"/>
                         </group>
                         <group string="Affectation">
-                            <field name="filiere_id" options="{'no_create': True}"/>
+                            <field name="filiere_id" options="{'no_create': True}"
+                                   readonly="state != 'draft'"/>
                             <field name="groupe_id"/>
                             <field name="niveau"/>
                             <field name="annee_inscription"/>
-                            <field name="annee_courante_id"/>
+                            <field name="annee_courante_id"
+                                   required="state in ['inscrit', 'actif']"/>
                         </group>
                     </group>
 
@@ -88,6 +106,12 @@
                         </page>
 
                         <page string="Inscriptions aux modules" name="inscriptions">
+                            <div class="alert alert-info" role="alert"
+                                 invisible="inscription_count > 0">
+                                <p><strong>Aucune inscription</strong></p>
+                                <p>Cliquez sur "Inscrire" pour inscrire automatiquement l'étudiant
+                                aux modules de 1ère année.</p>
+                            </div>
                             <field name="inscription_ids">
                                 <tree>
                                     <field name="module_id"/>
@@ -124,6 +148,8 @@
                 <field name="matricule"/>
                 <field name="filiere_id"/>
                 <field name="groupe_id"/>
+                <field name="state"/>
+                <field name="niveau"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -134,7 +160,10 @@
                                 <strong><field name="name"/></strong>
                                 <div><field name="matricule"/></div>
                                 <div><field name="filiere_id"/></div>
-                                <div><field name="groupe_id"/></div>
+                                <div>
+                                    <span class="badge badge-pill">Niveau <field name="niveau"/></span>
+                                    <field name="state" widget="label_selection"/>
+                                </div>
                             </div>
                         </div>
                     </t>
@@ -155,6 +184,7 @@
                 <separator/>
                 <filter string="Actifs" name="actif" domain="[('state', '=', 'actif')]"/>
                 <filter string="Inscrits" name="inscrit" domain="[('state', '=', 'inscrit')]"/>
+                <filter string="Brouillons" name="draft" domain="[('state', '=', 'draft')]"/>
                 <separator/>
                 <filter string="1ère année" name="niveau_1" domain="[('niveau', '=', '1')]"/>
                 <filter string="2ème année" name="niveau_2" domain="[('niveau', '=', '2')]"/>
@@ -182,6 +212,10 @@
             <p>
                 Lors de l'inscription, l'étudiant sera automatiquement inscrit
                 aux modules obligatoires de 1ère année de sa filière.
+            </p>
+            <p>
+                <strong>Important:</strong> Assurez-vous que l'année académique courante
+                est bien configurée dans Configuration → Année universitaire.
             </p>
         </field>
     </record>
