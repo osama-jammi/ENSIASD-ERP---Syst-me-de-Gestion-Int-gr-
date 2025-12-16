@@ -3,6 +3,7 @@
     <!-- Menu racine APPLICATION ACADÉMIQUE -->
     <menuitem id="menu_ensiasd_academic_root"
               name="Académique"
+
               sequence="20"
               web_icon="ensiasd_academic,static/description/icon.png"/>
 

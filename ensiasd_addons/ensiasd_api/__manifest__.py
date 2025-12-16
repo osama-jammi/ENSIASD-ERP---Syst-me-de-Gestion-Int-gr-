@@ -23,8 +23,8 @@
     'depends': [
         'base',
         'ensiasd_core',
-        'ensiasd_student',
         'ensiasd_academic',
+        'ensiasd_student',
         'ensiasd_grades',
         'ensiasd_absence',
     ],

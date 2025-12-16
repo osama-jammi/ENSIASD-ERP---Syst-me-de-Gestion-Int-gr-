@@ -82,7 +82,6 @@
     <!-- Menu dans API -->
     <menuitem id="menu_bulk_api_activation"
               name="Activation API en masse"
-              parent="menu_ensiasd_api"
               action="action_bulk_api_activation_wizard"
               sequence="10"
               groups="ensiasd_core.group_ensiasd_admin"/>

@@ -11,16 +11,38 @@
                     <group>
                         <group string="Informations Enseignant">
                             <field name="is_enseignant"/>
-                            <field name="matricule_enseignant" invisible="is_enseignant == False"/>
-                            <field name="grade" invisible="is_enseignant == False"/>
-                            <field name="specialite" invisible="is_enseignant == False"/>
-                            <field name="date_recrutement" invisible="is_enseignant == False"/>
-                            <field name="bureau" invisible="is_enseignant == False"/>
+                            <field name="matricule_enseignant" invisible="not is_enseignant"/>
+                            <field name="grade" invisible="not is_enseignant"/>
+                            <field name="specialite" invisible="not is_enseignant"/>
+                            <field name="date_recrutement" invisible="not is_enseignant"/>
+                            <field name="bureau" invisible="not is_enseignant"/>
                         </group>
-                        <group string="Affectations" invisible="is_enseignant == False">
+                        <group string="Affectations" invisible="not is_enseignant">
                             <field name="filiere_ids" widget="many2many_tags"/>
                         </group>
                     </group>
+                    <notebook invisible="not is_enseignant">
+                        <page string="Modules responsable">
+                            <field name="module_ids">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="filiere_id"/>
+                                    <field name="semestre"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Éléments enseignés">
+                            <field name="element_ids">
+                                <tree>
+                                    <field name="module_id"/>
+                                    <field name="name"/>
+                                    <field name="type_element"/>
+                                    <field name="volume_horaire"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </page>
             </xpath>
         </field>
@@ -36,6 +58,31 @@
                 <separator/>
                 <filter string="Enseignants" name="enseignants" domain="[('is_enseignant', '=', True)]"/>
             </xpath>
+            <xpath expr="//field[@name='name']" position="before">
+                <filter string="Grade" name="group_grade" context="{'group_by': 'grade'}"/>
+                <filter string="Spécialité" name="group_specialite" context="{'group_by': 'specialite'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Vue Kanban pour les enseignants - SIMPLIFIÉE -->
+    <record id="view_hr_employee_kanban_ensiasd" model="ir.ui.view">
+        <field name="name">hr.employee.kanban.ensiasd</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="js_class">hr_employee_kanban</attribute>
+            </xpath>
+            <!-- SIMPLIFICATION : Utiliser des divs conditionnels -->
+            <xpath expr="//div[hasclass('oe_kanban_details')]" position="inside">
+                <div class="oe_kanban_bottom_left">
+                    <div t-if="record.is_enseignant and record.is_enseignant === true">
+                        <small><field name="grade"/></small><br/>
+                        <small><field name="specialite"/></small>
+                    </div>
+                </div>
+            </xpath>
         </field>
     </record>
 
@@ -43,8 +90,19 @@
     <record id="action_hr_employee_enseignants" model="ir.actions.act_window">
         <field name="name">Enseignants</field>
         <field name="res_model">hr.employee</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">kanban,tree,form</field>
         <field name="domain">[('is_enseignant', '=', True)]</field>
-        <field name="context">{'default_is_enseignant': True}</field>
+        <field name="context">{
+            'default_is_enseignant': True,
+            'search_default_enseignants': 1
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Ajouter un nouvel enseignant
+            </p>
+            <p>
+                Créez et gérez les profils des enseignants de l'ENSIASD.
+            </p>
+        </field>
     </record>
 </odoo>
