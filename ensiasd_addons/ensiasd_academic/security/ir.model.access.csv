@@ -1,9 +1,25 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_ensiasd_filiere_admin,ensiasd.filiere.admin,model_ensiasd_filiere,ensiasd_core.group_ensiasd_admin,1,1,1,1
-access_ensiasd_filiere_user,ensiasd.filiere.user,model_ensiasd_filiere,ensiasd_core.group_ensiasd_teacher,1,0,0,0
-access_ensiasd_module_admin,ensiasd.module.admin,model_ensiasd_module,ensiasd_core.group_ensiasd_admin,1,1,1,1
-access_ensiasd_module_head,ensiasd.module.head,model_ensiasd_module,ensiasd_core.group_ensiasd_head,1,1,1,0
-access_ensiasd_module_user,ensiasd.module.user,model_ensiasd_module,ensiasd_core.group_ensiasd_teacher,1,0,0,0
-access_ensiasd_element_admin,ensiasd.element.admin,model_ensiasd_element,ensiasd_core.group_ensiasd_admin,1,1,1,1
-access_ensiasd_element_head,ensiasd.element.head,model_ensiasd_element,ensiasd_core.group_ensiasd_head,1,1,1,0
-access_ensiasd_element_user,ensiasd.element.user,model_ensiasd_element,ensiasd_core.group_ensiasd_teacher,1,0,0,0
+access_ensiasd_filiere_admin,ensiasd.filiere admin,model_ensiasd_filiere,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_ensiasd_filiere_head,ensiasd.filiere head,model_ensiasd_filiere,ensiasd_core.group_ensiasd_head,1,1,1,0
+access_ensiasd_filiere_teacher,ensiasd.filiere teacher,model_ensiasd_filiere,ensiasd_core.group_ensiasd_teacher,1,0,0,0
+access_ensiasd_module_admin,ensiasd.module admin,model_ensiasd_module,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_ensiasd_module_head,ensiasd.module head,model_ensiasd_module,ensiasd_core.group_ensiasd_head,1,1,1,0
+access_ensiasd_module_teacher,ensiasd.module teacher,model_ensiasd_module,ensiasd_core.group_ensiasd_teacher,1,0,0,0
+access_ensiasd_element_admin,ensiasd.element admin,model_ensiasd_element,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_ensiasd_element_head,ensiasd.element head,model_ensiasd_element,ensiasd_core.group_ensiasd_head,1,1,1,0
+access_ensiasd_element_teacher,ensiasd.element teacher,model_ensiasd_element,ensiasd_core.group_ensiasd_teacher,1,0,0,0
+access_hr_employee_admin,hr.employee admin,hr.model_hr_employee,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_hr_employee_head,hr.employee head,hr.model_hr_employee,ensiasd_core.group_ensiasd_head,1,1,1,0
+access_hr_employee_teacher,hr.employee teacher,hr.model_hr_employee,ensiasd_core.group_ensiasd_teacher,1,0,0,0
+access_hr_resume_line_admin,hr.resume.line admin,hr_skills.model_hr_resume_line,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_hr_resume_line_head,hr.resume.line head,hr_skills.model_hr_resume_line,ensiasd_core.group_ensiasd_head,1,1,1,0
+access_hr_resume_line_teacher,hr.resume.line teacher,hr_skills.model_hr_resume_line,ensiasd_core.group_ensiasd_teacher,1,0,0,0
+access_hr_employee_skill_admin,hr.employee.skill admin,hr_skills.model_hr_employee_skill,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_hr_employee_skill_head,hr.employee.skill head,hr_skills.model_hr_employee_skill,ensiasd_core.group_ensiasd_head,1,1,1,0
+access_hr_employee_skill_teacher,hr.employee.skill teacher,hr_skills.model_hr_employee_skill,ensiasd_core.group_ensiasd_teacher,1,0,0,0
+access_resource_resource_admin,resource.resource admin,resource.model_resource_resource,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_resource_resource_head,resource.resource head,resource.model_resource_resource,ensiasd_core.group_ensiasd_head,1,1,1,0
+access_resource_resource_teacher,resource.resource teacher,resource.model_resource_resource,ensiasd_core.group_ensiasd_teacher,1,0,0,0
+access_resource_calendar_admin,resource.calendar admin,resource.model_resource_calendar,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_resource_calendar_head,resource.calendar head,resource.model_resource_calendar,ensiasd_core.group_ensiasd_head,1,1,1,0
+access_resource_calendar_teacher,resource.calendar teacher,resource.model_resource_calendar,ensiasd_core.group_ensiasd_teacher,1,0,0,0

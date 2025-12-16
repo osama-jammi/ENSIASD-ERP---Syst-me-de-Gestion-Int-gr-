@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Règles d'accès pour les enseignants (hr.employee) -->
+    <record id="hr_employee_enseignant_rule_admin" model="ir.rule">
+        <field name="name">Enseignants - Admin accès total</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('ensiasd_core.group_ensiasd_admin'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="hr_employee_enseignant_rule_head" model="ir.rule">
+        <field name="name">Enseignants - Chef département lecture/écriture</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('is_enseignant', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('ensiasd_core.group_ensiasd_head'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="hr_employee_enseignant_rule_teacher" model="ir.rule">
+        <field name="name">Enseignants - Enseignant lecture seule</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('is_enseignant', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('ensiasd_core.group_ensiasd_teacher'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Règles d'accès pour hr.resume.line -->
+    <record id="hr_resume_line_rule_admin" model="ir.rule">
+        <field name="name">Resume Lines - Admin accès total</field>
+        <field name="model_id" ref="hr_skills.model_hr_resume_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('ensiasd_core.group_ensiasd_admin'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="hr_resume_line_rule_head" model="ir.rule">
+        <field name="name">Resume Lines - Chef département</field>
+        <field name="model_id" ref="hr_skills.model_hr_resume_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('ensiasd_core.group_ensiasd_head'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Règles d'accès pour hr.employee.skill -->
+    <record id="hr_employee_skill_rule_admin" model="ir.rule">
+        <field name="name">Employee Skills - Admin accès total</field>
+        <field name="model_id" ref="hr_skills.model_hr_employee_skill"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('ensiasd_core.group_ensiasd_admin'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="hr_employee_skill_rule_head" model="ir.rule">
+        <field name="name">Employee Skills - Chef département</field>
+        <field name="model_id" ref="hr_skills.model_hr_employee_skill"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('ensiasd_core.group_ensiasd_head'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Règles d'accès pour resource.resource -->
+    <record id="resource_resource_rule_admin" model="ir.rule">
+        <field name="name">Resources - Admin accès total</field>
+        <field name="model_id" ref="resource.model_resource_resource"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('ensiasd_core.group_ensiasd_admin'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="resource_resource_rule_head" model="ir.rule">
+        <field name="name">Resources - Chef département</field>
+        <field name="model_id" ref="resource.model_resource_resource"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('ensiasd_core.group_ensiasd_head'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+</odoo>

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'ENSIASD Académique',
-    'version': '17.0.2.0.0',
+    'version': '17.0.2.1.0',
     'category': 'Education',
-    'summary': 'Gestion académique - Filières, Modules, Éléments',
+    'summary': 'Gestion académique - Filières, Modules, Éléments, Enseignants',
     'description': """
         Application de gestion académique pour ENSIASD.
 
@@ -12,6 +12,7 @@
         - Configuration des semestres (S1-S6)
         - Modules avec crédits ECTS
         - Éléments de module (CM, TD, TP)
+        - Gestion des enseignants avec workflow
         - Extension des enseignants (hr.employee)
 
         Note: Les inscriptions sont gérées dans le module ensiasd_student
@@ -21,10 +22,12 @@
 
     'depends': [
         'ensiasd_core',
-        'hr',  # Pour les enseignants
+        'hr',
+        'resource',
     ],
 
     'data': [
+        'security/ensiasd_academic_security.xml',
         'security/ir.model.access.csv',
         'data/ensiasd_academic_data.xml',
         'views/ensiasd_filiere_views.xml',
@@ -37,4 +40,5 @@
     'installable': True,
     'application': True,
     'sequence': 3,
+    'auto_install': False,
 }
