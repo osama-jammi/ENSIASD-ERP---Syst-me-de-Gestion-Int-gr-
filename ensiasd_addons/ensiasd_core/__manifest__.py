@@ -11,7 +11,7 @@
         - Salles et ressources
         - Groupes de sécurité communs
     """,
-    'author': 'ENSIASD - Jammi Osama',
+    'author': 'ENSIASD ',
     'website': 'https://ensiasd.ac.ma',
     'license': 'LGPL-3',
     

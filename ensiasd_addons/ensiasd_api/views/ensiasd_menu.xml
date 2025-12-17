@@ -3,7 +3,6 @@
     <!-- Menu API dans la configuration ENSIASD -->
     <menuitem id="menu_ensiasd_api"
               name="API"
-              parent="ensiasd_core.menu_ensiasd_config"
               sequence="50"
               groups="ensiasd_core.group_ensiasd_admin"/>
 
