@@ -1,6 +1,6 @@
 # ENSIASD ERP - Système de Gestion Intégré
 
-Système ERP complet développé pour l'**École Nationale Supérieure de l'Intelligence Artificielle et Sciences des Données (ENSIASD)** utilisant Odoo 17.
+Système ERP complet développé pour l'École Nationale Supérieure de l'Intelligence Artificielle et Sciences des Données (ENSIASD) utilisant Odoo 17.
 
 ## 📋 Aperçu du Projet
 
@@ -11,6 +11,7 @@ Ce projet fournit une solution ERP modulaire pour la gestion académique complè
 - **Gestion des notes** : Enregistrement et gestion des résultats académiques
 - **Suivi des absences** : Système de suivi de l'assiduité
 - **Gestion des stages** : Gestion des internships et stages professionnels
+- **Emplois du temps** : Gestion et planification des emplois du temps
 - **Rapports académiques** : Génération de rapports analytiques
 - **Configuration de base** : Gestion des années académiques et des salles
 
@@ -48,7 +49,14 @@ Ce projet fournit une solution ERP modulaire pour la gestion académique complè
    - Suivi des internships
    - Évaluation des stages
 
-7. **ensiasd_reports** - Rapports analytiques
+7. **ensiasd_timetable** - Gestion des emplois du temps
+   - Planification des cours
+   - Génération des horaires
+   - Gestion des salles et ressources
+   - Détection des conflits d'emploi du temps
+   - Export PDF/Excel des emplois du temps
+
+8. **ensiasd_reports** - Rapports analytiques
    - Rapports académiques
    - Statistiques d'étudiants
    - Tableaux de bord
@@ -63,26 +71,57 @@ Ce projet fournit une solution ERP modulaire pour la gestion académique complè
 
 ## 📦 Installation et Configuration
 
-### 1. Cloner le Repository
+### 1. Préparation de l'Environnement
 
 ```bash
-https://github.com/osama-jammi/ENSIASD-ERP---Syst-me-de-Gestion-Int-gr-.git
+# Créer un répertoire pour le projet
+mkdir ensiasd-project
+cd ensiasd-project
+
+# Créer un répertoire pour Odoo
+mkdir odoo
+```
+
+### 2. Cloner le Repository ENSIASD ERP
+
+```bash
+# Cloner le repository ENSIASD ERP
+git clone https://github.com/osama-jammi/ENSIASD-ERP---Syst-me-de-Gestion-Int-gr-.git ensiasd-erp
 cd ensiasd-erp
 ```
 
-### 2. Configuration de la Base de Données PostgreSQL
+### 3. Cloner Odoo 17
+
+```bash
+# Se déplacer dans le dossier odoo
+cd ../odoo
+
+# Cloner Odoo 17 depuis la source officielle
+git clone https://github.com/odoo/odoo.git --branch 17.0 --depth 1 .
+
+# Installer les dépendances Python d'Odoo
+pip install -r requirements.txt
+
+# Retourner au répertoire ensiasd-erp
+cd ../ensiasd-erp
+```
+
+### 4. Configuration de la Base de Données PostgreSQL
 
 ```bash
 # Créer l'utilisateur PostgreSQL
-createuser -U postgres openpg -P
+sudo -u postgres createuser -U postgres openpg -P
 
 # Créer la base de données
-createdb -U postgres -O openpg ensiasd_v20
+sudo -u postgres createdb -U postgres -O openpg ensiasd_v20
 ```
 
-### 3. Configuration d'Odoo
+**Note pour Windows :**
+- Utiliser pgAdmin ou les commandes via PostgreSQL Shell
 
-Créer ou modifier le fichier `odoo.conf` :
+### 5. Configuration d'Odoo
+
+Créer ou modifier le fichier `odoo.conf` dans le répertoire principal :
 
 ```ini
 [options]
@@ -95,7 +134,7 @@ db_password = mot_de_passe
 db_name = ensiasd_v20
 
 ; Répertoires
-addons_path = ./addons,./ensiasd_addons
+addons_path = ../odoo/addons,./ensiasd_addons
 data_dir = ./data
 
 ; Port
@@ -111,25 +150,26 @@ logfile = ./logs/odoo.log
 dev_mode = True
 ```
 
-### 4. Initialiser la Base de Données
+### 6. Initialiser la Base de Données
 
 **Première initialisation - Installation complète :**
 
 ```bash
-python ./odoo/odoo-bin -c ./odoo/odoo.conf -i base -d ensiasd_v20 --without-demo=all
+# Depuis le répertoire ensiasd-erp
+python ../odoo/odoo-bin -c odoo.conf -i base -d ensiasd_v20 --without-demo=all
 ```
 
 **Après installation initiale - Démarrage normal :**
 
 ```bash
-python ./odoo/odoo-bin -c ./odoo/odoo.conf -d ensiasd_v20
+python ../odoo/odoo-bin -c odoo.conf -d ensiasd_v20
 ```
 
-### 5. Installation des Modules ENSIASD
+### 7. Installation des Modules ENSIASD
 
 Une fois Odoo en cours d'exécution, accédez à l'interface web à `http://localhost:8089`
 
-1. Allez à **Tableau de Bord** → **Apps**
+1. Allez à **Tableau de Bord → Apps**
 2. Cliquez sur **Mettre à jour la liste des apps**
 3. Recherchez les modules ENSIASD :
    - ensiasd_core
@@ -138,17 +178,17 @@ Une fois Odoo en cours d'exécution, accédez à l'interface web à `http://loca
    - ensiasd_grades
    - ensiasd_absence
    - ensiasd_stage
+   - ensiasd_timetable
    - ensiasd_reports
-
-4. Cliquez **Installer** pour chaque module
+4. Cliquez **Installer** pour chaque module dans l'ordre de dépendance
 
 ## 🚀 Utilisation
 
 ### Démarrer le Serveur
 
 ```bash
-# Mode développement
-python ./odoo/odoo-bin -c ./odoo/odoo.conf -d ensiasd_v20
+# Depuis le répertoire ensiasd-erp
+python ../odoo/odoo-bin -c odoo.conf -d ensiasd_v20
 
 # Accéder à l'interface
 # http://localhost:8089
@@ -163,42 +203,50 @@ python ./odoo/odoo-bin -c ./odoo/odoo.conf -d ensiasd_v20
 ## 📁 Structure du Repository
 
 ```
-ensiasd-erp/
-├── README.md                 # Ce fichier
-├── INSTALLATION.md           # Guide d'installation détaillé
-├── .gitignore               # Fichier Git ignore
-├── odoo.conf.template       # Template de configuration Odoo
+ensiasd-project/
+├── odoo/                    # Code source Odoo 17 (cloné)
+│   ├── odoo-bin
+│   ├── addons/
+│   ├── requirements.txt
+│   └── ...
 │
-├── ensiasd_addons/          # Modules ENSIASD
-│   ├── ensiasd_core/
-│   │   ├── __manifest__.py
-│   │   ├── __init__.py
-│   │   ├── models/
-│   │   ├── views/
-│   │   ├── data/
-│   │   └── security/
-│   │
-│   ├── ensiasd_student/
-│   ├── ensiasd_academic/
-│   ├── ensiasd_grades/
-│   ├── ensiasd_absence/
-│   ├── ensiasd_stage/
-│   └── ensiasd_reports/
-│
-├── docs/                    # Documentation
-│   ├── ARCHITECTURE.md
-│   ├── DATABASE_SCHEMA.md
-│   └── API.md
-│
-├── scripts/                 # Scripts utilitaires
-│   ├── init_db.sh
-│   ├── backup_db.sh
-│   └── restore_db.sh
-│
-└── tests/                   # Tests unitaires
-    ├── test_student.py
-    ├── test_grades.py
-    └── test_academic.py
+└── ensiasd-erp/            # Projet ENSIASD ERP
+    ├── README.md           # Ce fichier
+    ├── INSTALLATION.md     # Guide d'installation détaillé
+    ├── .gitignore         # Fichier Git ignore
+    ├── odoo.conf          # Configuration Odoo
+    │
+    ├── ensiasd_addons/    # Modules ENSIASD
+    │   ├── ensiasd_core/
+    │   │   ├── __manifest__.py
+    │   │   ├── __init__.py
+    │   │   ├── models/
+    │   │   ├── views/
+    │   │   ├── data/
+    │   │   └── security/
+    │   │
+    │   ├── ensiasd_student/
+    │   ├── ensiasd_academic/
+    │   ├── ensiasd_grades/
+    │   ├── ensiasd_absence/
+    │   ├── ensiasd_stage/
+    │   ├── ensiasd_timetable/   # Module emplois du temps
+    │   └── ensiasd_reports/
+    │
+    ├── docs/              # Documentation
+    │   ├── ARCHITECTURE.md
+    │   ├── DATABASE_SCHEMA.md
+    │   └── API.md
+    │
+    ├── scripts/           # Scripts utilitaires
+    │   ├── init_db.sh
+    │   ├── backup_db.sh
+    │   └── restore_db.sh
+    │
+    └── tests/             # Tests unitaires
+        ├── test_student.py
+        ├── test_grades.py
+        └── test_academic.py
 ```
 
 ## 🔄 Flux de Travail Git
@@ -210,12 +258,13 @@ ensiasd-erp/
 git init
 
 # Ajouter la remote
-https://github.com/osama-jammi/ENSIASD-ERP---Syst-me-de-Gestion-Int-gr-.git
+git remote add origin https://github.com/osama-jammi/ENSIASD-ERP---Syst-me-de-Gestion-Int-gr-.git
+
 # Ajouter tous les fichiers
 git add .
 
 # Premier commit
-git commit -m "Initial commit: ENSIASD ERP base avec 7 modules"
+git commit -m "Initial commit: ENSIASD ERP base avec 8 modules"
 
 # Pousser vers GitHub
 git branch -M main
@@ -232,7 +281,7 @@ git status
 git add .
 
 # Commit avec message descriptif
-git commit -m "feat: ajouter validation des absences"
+git commit -m "feat(timetable): ajouter gestion des emplois du temps"
 
 # Pousser vers GitHub
 git push origin main
@@ -248,12 +297,30 @@ ensiasd_student (dépend de core)
 ensiasd_academic (dépend de student)
     ├→ ensiasd_grades (dépend de academic)
     ├→ ensiasd_absence (dépend de academic)
+    ├→ ensiasd_timetable (dépend de academic et student)
     └→ ensiasd_stage (dépend de student)
     
 ensiasd_reports (dépend de tous)
 ```
 
- 
+## 🕒 Module Timetable
+
+Le module **ensiasd_timetable** comprend :
+
+### Fonctionnalités principales :
+
+- **Planification des cours** : Création automatique et manuelle des horaires
+- **Gestion des salles** : Allocation optimale des salles de classe
+- **Gestion des enseignants** : Assignation des professeurs aux créneaux
+- **Vérification des conflits** : Détection automatique des chevauchements
+- **Export des emplois du temps** : Formats PDF, Excel, et calendrier numérique
+- **Notifications** : Alertes pour les changements d'horaires
+
+### Dépendances :
+
+- **ensiasd_academic** : Pour les cours et programmes
+- **ensiasd_student** : Pour les groupes d'étudiants
+- **ensiasd_core** : Pour les salles et ressources
 
 ## 📝 Conventions de Code
 
@@ -276,25 +343,23 @@ Les contributions sont bienvenues. Veuillez :
 
 Ce projet est développé pour ENSIASD. Licencié sous MIT License.
 
-## 👤 Auteur
-
-**Osama** - Développement ERP/Odoo
-
 ## 📞 Support
 
 Pour les problèmes ou questions :
-- Ouvrir une **Issue** sur GitHub
-- Vérifier la **Documentation**
-- Consulter les **Discussions**
+
+- Ouvrir une Issue sur GitHub
+- Vérifier la Documentation
+- Consulter les Discussions
 
 ## 🔗 Ressources Utiles
 
 - [Documentation Odoo 17](https://www.odoo.com/documentation/17.0/)
-- [Développement Modules Odoo](https://www.odoo.com/documentation/17.0/developer/reference.html)
+- [Développement Modules Odoo](https://www.odoo.com/documentation/17.0/developer.html)
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
 - [Python Documentation](https://docs.python.org/3/)
 
 ---
 
-**Dernière mise à jour** : 2025-12-09
-**Version** : 1.0.0
+**Dernière mise à jour** : 2025-12-17  
+**Version** : 1.2.0 (avec module Timetable)  
+**Statut** : Production Ready
