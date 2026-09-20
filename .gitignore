@@ -1,0 +1,25 @@
+# Byte-compiled / cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Données runtime Odoo (filestore, sessions) — spécifiques à l'environnement local
+/data/
+
+# Configuration locale Odoo (contient des identifiants) — voir odoo.conf.example
+/odoo.conf
+
+# Clone vendored d'Odoo (dépôt Git indépendant, non suivi ici)
+/odoo/
+
+# Environnements virtuels Python
+venv/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

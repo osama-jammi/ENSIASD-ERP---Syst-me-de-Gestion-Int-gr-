@@ -1,26 +1,29 @@
 [options]
-addons_path = C:\Users\user\Desktop\ensiasd_ERP\ENSIASD-ERP---Syst-me-de-Gestion-Int-gr-\odoo\addons,C:\Users\user\Desktop\ensiasd_ERP\ENSIASD-ERP---Syst-me-de-Gestion-Int-gr-\ensiasd_addons
+; Copier ce fichier vers odoo.conf et adapter les chemins/valeurs à votre environnement.
+; Ne jamais committer odoo.conf (voir .gitignore).
+
+addons_path = /chemin/vers/odoo/addons,/chemin/vers/ensiasd_addons
 
 db_host = localhost
 db_port = 5432
 db_user = openpg
-db_password = openpgpwd
+db_password = CHANGE_ME
 db_name = ensiasd_v20
 
-data_dir = C:\Users\user\Desktop\ensiasd_ERP\ENSIASD-ERP---Syst-me-de-Gestion-Int-gr-\data
+data_dir = /chemin/vers/data
 
 dev_mode = reload,xml
 http_port = 8089
 without_demo = all
 log_level = info
 list_db = True
-admin_passwd = admin123
+admin_passwd = CHANGE_ME
 
-# ===============================================
-# odoo.conf - VERSION CORRIGÉE
-# ✅ Utilise la bonne base: ensiasd_v20
-# ✅ Port 8080 (pour le port externe 8069)
-# ===============================================
+; ===============================================
+; odoo.conf - VERSION CORRIGÉE
+; Utilise la base: ensiasd_v20
+; Port 8080 (pour le port externe 8069)
+; ===============================================
 ;
 ; [options]
 ; # Addons path - important pour nos modules
@@ -29,7 +32,7 @@ admin_passwd = admin123
 ; db_host = postgres
 ; db_port = 5432
 ; db_user = openpg
-; db_password = openpgpwd
+; db_password = CHANGE_ME
 ; db_name = ensiasd_v20
 ;
 ; # Data directory
@@ -48,7 +51,7 @@ admin_passwd = admin123
 ; without_demo = all
 ;
 ; # Security
-; admin_passwd = admin123
+; admin_passwd = CHANGE_ME
 ;
 ; # Development mode (reload on file change)
 ; dev_mode = reload,xml
