@@ -127,22 +127,26 @@ class EnsiasdStudentApiMixin(models.Model):
         new_password = self._generate_auto_password(self.cne, self.cin)
         self.set_api_password(new_password)
 
-        # Message de confirmation avec le mot de passe (ATTENTION: à ne montrer qu'une fois!)
+        # Ne jamais afficher le mot de passe en clair dans une notification
+        # backend : voir action_show_api_credentials pour le même principe.
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
                 'title': 'Mot de passe régénéré',
-                'message': f'Nouveau mot de passe API: {new_password}',
+                'message': "Nouveau mot de passe API généré (format CNE+CIN). "
+                           "Communiquez-le à l'étudiant selon la procédure habituelle.",
                 'type': 'success',
-                'sticky': True,  # Reste affiché
+                'sticky': True,
             }
         }
 
     def action_show_api_credentials(self):
         """
-        Affiche les identifiants API de l'étudiant
-        (Utile pour le support)
+        Affiche le statut des identifiants API de l'étudiant, sans jamais
+        révéler le mot de passe lui-même (outil de diagnostic pour le
+        support/la scolarité : accès activé ? mot de passe défini ?
+        dernière connexion ?).
         """
         self.ensure_one()
 
@@ -151,14 +155,14 @@ class EnsiasdStudentApiMixin(models.Model):
         elif not self.api_password_hash:
             message = "Aucun mot de passe API défini. Utilisez 'Régénérer mot de passe API'"
         else:
-            # Ne jamais afficher le vrai mot de passe!
-            message = f"""
-            Identifiants API:
-            - CNE: {self.cne}
-            - Mot de passe: CNE+CIN (Format: {self.cne}+{self.cin if self.cin else 'XXXX'})
-            - Statut: {'Actif' if self.api_enabled else 'Inactif'}
-            - Dernière connexion: {self.last_api_login or 'Jamais'}
-            """
+            message = (
+                f"Identifiants API:\n"
+                f"- CNE: {self.cne}\n"
+                f"- Statut: Actif\n"
+                f"- Dernière connexion: {self.last_api_login or 'Jamais'}\n\n"
+                f"Le mot de passe n'est jamais affiché. Utilisez "
+                f"'Régénérer mot de passe API' si l'étudiant l'a perdu."
+            )
 
         return {
             'type': 'ir.actions.client',
