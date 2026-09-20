@@ -219,29 +219,31 @@ class EnsiasdStudent(models.Model):
             return
 
         # Créer les inscriptions
+        existing_module_ids = set(self.env['ensiasd.inscription'].search([
+            ('student_id', '=', self.id),
+            ('module_id', 'in', modules.ids),
+            ('annee_id', '=', self.annee_courante_id.id)
+        ]).mapped('module_id.id'))
+
         inscriptions_created = 0
         for module in modules:
             # Vérifier si pas déjà inscrit
-            existing = self.env['ensiasd.inscription'].search([
-                ('student_id', '=', self.id),
-                ('module_id', '=', module.id),
-                ('annee_id', '=', self.annee_courante_id.id)
-            ])
+            if module.id in existing_module_ids:
+                continue
 
-            if not existing:
-                try:
-                    self.env['ensiasd.inscription'].create({
-                        'student_id': self.id,
-                        'module_id': module.id,
-                        'annee_id': self.annee_courante_id.id,
-                        'state': 'confirmed',
-                        'date_inscription': fields.Date.today(),
-                    })
-                    inscriptions_created += 1
-                except Exception as e:
-                    raise ValidationError(
-                        f"Erreur lors de l'inscription au module {module.code}: {str(e)}"
-                    )
+            try:
+                self.env['ensiasd.inscription'].create({
+                    'student_id': self.id,
+                    'module_id': module.id,
+                    'annee_id': self.annee_courante_id.id,
+                    'state': 'confirmed',
+                    'date_inscription': fields.Date.today(),
+                })
+                inscriptions_created += 1
+            except Exception as e:
+                raise ValidationError(
+                    f"Erreur lors de l'inscription au module {module.code}: {str(e)}"
+                )
 
         # Message de confirmation
         if inscriptions_created > 0:
@@ -352,29 +354,31 @@ class EnsiasdStudent(models.Model):
             )
 
         # Créer les inscriptions
+        existing_module_ids = set(self.env['ensiasd.inscription'].search([
+            ('student_id', '=', self.id),
+            ('module_id', 'in', modules.ids),
+            ('annee_id', '=', self.annee_courante_id.id)
+        ]).mapped('module_id.id'))
+
         inscriptions_created = 0
         errors = []
 
         for module in modules:
             # Vérifier si pas déjà inscrit
-            existing = self.env['ensiasd.inscription'].search([
-                ('student_id', '=', self.id),
-                ('module_id', '=', module.id),
-                ('annee_id', '=', self.annee_courante_id.id)
-            ])
+            if module.id in existing_module_ids:
+                continue
 
-            if not existing:
-                try:
-                    self.env['ensiasd.inscription'].create({
-                        'student_id': self.id,
-                        'module_id': module.id,
-                        'annee_id': self.annee_courante_id.id,
-                        'state': 'confirmed',
-                        'date_inscription': fields.Date.today(),
-                    })
-                    inscriptions_created += 1
-                except Exception as e:
-                    errors.append(f"Module {module.code}: {str(e)}")
+            try:
+                self.env['ensiasd.inscription'].create({
+                    'student_id': self.id,
+                    'module_id': module.id,
+                    'annee_id': self.annee_courante_id.id,
+                    'state': 'confirmed',
+                    'date_inscription': fields.Date.today(),
+                })
+                inscriptions_created += 1
+            except Exception as e:
+                errors.append(f"Module {module.code}: {str(e)}")
 
         if errors:
             raise ValidationError(
