@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import http
+from odoo import http, fields
 from odoo.http import request
 import json
 
@@ -85,7 +85,7 @@ class AbsenceController(http.Controller):
         # Marquer la séance comme appel fait
         seance.sudo().write({
             'appel_fait': True,
-            'date_appel': request.env['fields'].Datetime.now(),
+            'date_appel': fields.Datetime.now(),
             'state': 'done',
         })
         
@@ -126,7 +126,7 @@ class AbsenceController(http.Controller):
         vals = {
             'motif': motif,
             'state': 'pending',
-            'date_justification': request.env['fields'].Datetime.now(),
+            'date_justification': fields.Datetime.now(),
         }
         
         if justificatif:
