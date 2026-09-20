@@ -18,7 +18,6 @@ class EnsiasdApiToken(models.Model):
         ondelete='cascade'
     )
     
-    token = fields.Char(string='Token', readonly=True, index=True)
     token_hash = fields.Char(string='Hash Token', readonly=True, index=True)
     
     expires_at = fields.Datetime(string='Expire le', readonly=True)
@@ -70,7 +69,6 @@ class EnsiasdApiToken(models.Model):
         # Créer le nouveau token
         token = self.create({
             'student_id': student_id,
-            'token': raw_token,
             'token_hash': token_hash,
             'expires_at': expires_at,
             'ip_address': ip_address,
