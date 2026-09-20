@@ -98,7 +98,9 @@ cd ../odoo
 
 # Cloner Odoo 17 depuis la source officielle
 git clone https://github.com/odoo/odoo.git --branch 17.0 --depth 1 .
-
+#envirenemtnet de python 11
+py -3.11 -m venv venv
+.\venv\Scripts\activate
 # Installer les dépendances Python d'Odoo
 pip install -r requirements.txt
 
