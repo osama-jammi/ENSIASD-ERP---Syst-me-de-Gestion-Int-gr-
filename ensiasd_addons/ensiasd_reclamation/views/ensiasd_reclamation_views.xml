@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue Liste / Tree -->
+    <record id="view_ensiasd_reclamation_tree" model="ir.ui.view">
+        <field name="name">ensiasd.reclamation.tree</field>
+        <field name="model">ensiasd.reclamation</field>
+        <field name="arch" type="xml">
+            <tree string="Réclamations" decoration-info="state == 'soumise'" decoration-warning="state == 'en_cours'" decoration-success="state == 'traitee'" decoration-danger="state == 'rejetee'">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="cne"/>
+                <field name="filiere_id"/>
+                <field name="categorie"/>
+                <field name="sujet"/>
+                <field name="date_soumission"/>
+                <field name="priorite" widget="priority"/>
+                <field name="state" widget="badge" decoration-info="state == 'soumise'" decoration-warning="state == 'en_cours'" decoration-success="state == 'traitee'" decoration-danger="state == 'rejetee'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue Formulaire -->
+    <record id="view_ensiasd_reclamation_form" model="ir.ui.view">
+        <field name="name">ensiasd.reclamation.form</field>
+        <field name="model">ensiasd.reclamation</field>
+        <field name="arch" type="xml">
+            <form string="Réclamation Étudiant">
+                <header>
+                    <button name="action_soumettre" string="Soumettre" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_en_cours" string="Prendre en charge" type="object" class="btn-warning" invisible="state != 'soumise'"/>
+                    <button name="action_traiter" string="Marquer comme traitée" type="object" class="btn-success" invisible="state != 'en_cours'"/>
+                    <button name="action_rejeter" string="Rejeter" type="object" class="btn-danger" invisible="state not in ('soumise', 'en_cours')"/>
+                    <button name="action_remettre_brouillon" string="Remettre en brouillon" type="object" invisible="state not in ('traitee', 'rejetee')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,soumise,en_cours,traitee"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">Réclamation</span>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Informations Étudiant">
+                            <field name="student_id" readonly="state != 'draft'"/>
+                            <field name="cne"/>
+                            <field name="filiere_id"/>
+                            <field name="date_soumission"/>
+                        </group>
+                        <group string="Détails de la Demande">
+                            <field name="categorie" readonly="state != 'draft'"/>
+                            <field name="priorite" widget="priority" readonly="state != 'draft'"/>
+                            <field name="traite_par"/>
+                            <field name="date_traitement"/>
+                        </group>
+                    </group>
+                    <group string="Objet de la réclamation">
+                        <field name="sujet" placeholder="Ex: Erreur de saisie de la note d'Algorithmique" readonly="state != 'draft'"/>
+                        <field name="description" placeholder="Expliquez en détail votre situation..." readonly="state != 'draft'"/>
+                    </group>
+                    <notebook>
+                        <page string="Réponse &amp; Traitement Scolarité" name="reponse">
+                            <group>
+                                <field name="reponse" placeholder="Saisir la réponse apportée à l'étudiant..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue Recherche -->
+    <record id="view_ensiasd_reclamation_search" model="ir.ui.view">
+        <field name="name">ensiasd.reclamation.search</field>
+        <field name="model">ensiasd.reclamation</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher des réclamations">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="cne"/>
+                <field name="sujet"/>
+                <separator/>
+                <filter string="Brouillon" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Soumises" name="filter_soumise" domain="[('state', '=', 'soumise')]"/>
+                <filter string="En cours" name="filter_en_cours" domain="[('state', '=', 'en_cours')]"/>
+                <filter string="Traitées" name="filter_traitee" domain="[('state', '=', 'traitee')]"/>
+                <filter string="Rejetées" name="filter_rejetee" domain="[('state', '=', 'rejetee')]"/>
+                <separator/>
+                <filter string="Contestation Note" name="cat_note" domain="[('categorie', '=', 'note')]"/>
+                <filter string="Erreur Absence" name="cat_absence" domain="[('categorie', '=', 'absence')]"/>
+                <filter string="Urgentes" name="filter_urgente" domain="[('priorite', '=', '1')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Étudiant" name="group_student" context="{'group_by': 'student_id'}"/>
+                    <filter string="Filière" name="group_filiere" context="{'group_by': 'filiere_id'}"/>
+                    <filter string="Catégorie" name="group_categorie" context="{'group_by': 'categorie'}"/>
+                    <filter string="État" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action Fenêtre -->
+    <record id="action_ensiasd_reclamation" model="ir.actions.act_window">
+        <field name="name">Réclamations Étudiants</field>
+        <field name="res_model">ensiasd.reclamation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_filter_soumise': 1, 'search_default_filter_en_cours': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune réclamation enregistrée
+            </p>
+            <p>
+                Les réclamations soumises par les étudiants via le portail ou créées manuellement apparaîtront ici.
+            </p>
+        </field>
+    </record>
+</odoo>

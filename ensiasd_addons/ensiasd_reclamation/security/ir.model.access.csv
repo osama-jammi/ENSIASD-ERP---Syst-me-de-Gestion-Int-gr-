@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ensiasd_reclamation_admin,ensiasd.reclamation.admin,model_ensiasd_reclamation,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_ensiasd_reclamation_scolarite,ensiasd.reclamation.scolarite,model_ensiasd_reclamation,ensiasd_core.group_ensiasd_scolarite,1,1,1,0
+access_ensiasd_reclamation_teacher,ensiasd.reclamation.teacher,model_ensiasd_reclamation,ensiasd_core.group_ensiasd_teacher,1,1,0,0
+access_ensiasd_reclamation_student,ensiasd.reclamation.student,model_ensiasd_reclamation,ensiasd_core.group_ensiasd_student,1,1,1,0

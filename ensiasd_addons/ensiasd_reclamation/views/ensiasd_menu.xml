@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu racine APPLICATION RÉCLAMATIONS -->
+    <menuitem id="menu_ensiasd_reclamation_root"
+              name="Réclamations"
+              sequence="35"
+              web_icon="ensiasd_reclamation,static/description/icon.png"/>
+
+    <menuitem id="menu_ensiasd_reclamation_main"
+              name="Gestion des Réclamations"
+              parent="menu_ensiasd_reclamation_root"
+              sequence="1"/>
+
+    <menuitem id="menu_ensiasd_reclamation_list"
+              name="Toutes les réclamations"
+              parent="menu_ensiasd_reclamation_main"
+              action="action_ensiasd_reclamation"
+              sequence="1"/>
+</odoo>

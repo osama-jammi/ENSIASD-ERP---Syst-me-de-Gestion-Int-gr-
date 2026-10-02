@@ -534,3 +534,63 @@ class EnsiasdApiController(http.Controller):
             'success': True,
             'data': modules
         })
+
+    # ========== RÉCLAMATIONS ÉTUDIANTS ==========
+
+    @http.route('/api/v1/reclamations', type='http', auth='none', methods=['GET'], csrf=False)
+    @require_api_key
+    @require_token
+    @log_request('/reclamations', 'GET')
+    def get_reclamations(self):
+        """Liste des réclamations de l'étudiant connecté"""
+        student = request.student.sudo()
+        reclamations = request.env['ensiasd.reclamation'].sudo().search([
+            ('student_id', '=', student.id)
+        ], order='date_soumission desc, id desc')
+        
+        data = [r.to_api_dict() for r in reclamations]
+        return json_response({
+            'success': True,
+            'data': data,
+            'count': len(data)
+        })
+
+    @http.route('/api/v1/reclamations', type='http', auth='none', methods=['POST'], csrf=False)
+    @require_api_key
+    @require_token
+    @log_request('/reclamations', 'POST')
+    def create_reclamation(self):
+        """Création d'une nouvelle réclamation par l'étudiant"""
+        student = request.student.sudo()
+        try:
+            body = json.loads(request.httprequest.data.decode('utf-8'))
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            return api_error('JSON invalide', 400, 'INVALID_JSON')
+        
+        sujet = (body.get('sujet') or '').strip()
+        description = (body.get('description') or '').strip()
+        categorie = body.get('categorie', 'note')
+        priorite = str(body.get('priorite', '0'))
+        
+        if not sujet or not description:
+            return api_error('Le sujet et la description sont requis', 400, 'MISSING_FIELDS')
+        
+        valid_categories = ['note', 'absence', 'pedagogique', 'administratif', 'autre']
+        if categorie not in valid_categories:
+            categorie = 'autre'
+            
+        reclamation = request.env['ensiasd.reclamation'].sudo().create({
+            'student_id': student.id,
+            'sujet': sujet,
+            'description': description,
+            'categorie': categorie,
+            'priorite': priorite if priorite in ['0', '1'] else '0',
+            'state': 'soumise',
+        })
+        
+        return json_response({
+            'success': True,
+            'message': 'Réclamation soumise avec succès',
+            'data': reclamation.to_api_dict()
+        }, status=201)
+
