@@ -8,3 +8,5 @@ access_ensiasd_groupe_teacher,ensiasd.groupe.teacher,model_ensiasd_groupe,ensias
 access_ensiasd_inscription_admin,ensiasd.inscription.admin,model_ensiasd_inscription,ensiasd_core.group_ensiasd_admin,1,1,1,1
 access_ensiasd_inscription_scolarite,ensiasd.inscription.scolarite,model_ensiasd_inscription,ensiasd_core.group_ensiasd_scolarite,1,1,1,0
 access_ensiasd_inscription_teacher,ensiasd.inscription.teacher,model_ensiasd_inscription,ensiasd_core.group_ensiasd_teacher,1,0,0,0
+access_student_import_wizard_admin,ensiasd.student.import.wizard.admin,model_ensiasd_student_import_wizard,ensiasd_core.group_ensiasd_admin,1,1,1,1
+access_student_import_wizard_scolarite,ensiasd.student.import.wizard.scolarite,model_ensiasd_student_import_wizard,ensiasd_core.group_ensiasd_scolarite,1,1,1,1

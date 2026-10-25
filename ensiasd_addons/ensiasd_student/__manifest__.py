@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'ENSIASD Étudiants',
-    'version': '17.0.2.0.0',
+    'version': '17.0.2.1.0',
     'category': 'Education',
     'summary': 'Gestion complète des étudiants et inscriptions ENSIASD',
     'description': """
@@ -14,6 +14,7 @@
         - Affectation aux groupes
         - Historique du parcours académique
         - Intégration avec le module Contacts d'Odoo
+        - Import en masse CSV / Excel (wizard)
     """,
     'author': 'ENSIASD - Jammi Osama',
     'website': 'https://ensiasd.ac.ma',
@@ -32,6 +33,7 @@
         'views/ensiasd_student_views.xml',
         'views/ensiasd_groupe_views.xml',
         'views/ensiasd_inscription_views.xml',
+        'wizard/student_import_wizard_views.xml',
         'views/ensiasd_menu.xml',
     ],
 

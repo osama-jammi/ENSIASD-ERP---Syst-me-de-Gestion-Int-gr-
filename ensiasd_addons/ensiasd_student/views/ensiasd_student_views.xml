@@ -200,6 +200,24 @@
         </field>
     </record>
 
+        <!-- Bouton Import dans le menu contextuel de la liste -->
+    <record id="action_student_import_from_list" model="ir.actions.server">
+        <field name="name">Importer des étudiants (CSV/Excel)</field>
+        <field name="model_id" ref="ensiasd_student.model_ensiasd_student"/>
+        <field name="binding_model_id" ref="ensiasd_student.model_ensiasd_student"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+action = {
+    'type': 'ir.actions.act_window',
+    'name': 'Import en masse des étudiants',
+    'res_model': 'ensiasd.student.import.wizard',
+    'view_mode': 'form',
+    'target': 'new',
+}
+        </field>
+    </record>
+
     <record id="action_ensiasd_student" model="ir.actions.act_window">
         <field name="name">Étudiants</field>
         <field name="res_model">ensiasd.student</field>
